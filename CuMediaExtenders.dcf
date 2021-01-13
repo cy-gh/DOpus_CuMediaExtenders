@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<button backcol="none" display="icon" dropdown_glyph="yes" label_pos="right" textcol="none" type="menu">
+	<label>MExt Tools</label>
+	<tip>Media Extender: Copy/Dump ADS, Copy/Dump MediaInfo, Estimate...</tip>
+	<icon1>#MExt:Info</icon1>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Update Metadata</label>
+		<tip>Update video and audio metadata (read by MediaInfo) in custom ADS stream</tip>
+		<icon1>#MExt:Update</icon1>
+		<function type="normal">
+			<instruction>ME_Update</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Delete Metadata</label>
+		<tip>Delete video and audio metadata from custom ADS stream</tip>
+		<icon1>#MExt:Delete</icon1>
+		<function type="normal">
+			<instruction>ME_Delete</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" separate="yes" textcol="none">
+		<label>MExt Clear Cache</label>
+		<tip>Clear the in-memory cache</tip>
+		<icon1>#MExt:ClearCache</icon1>
+		<function type="normal">
+			<instruction>ME_ClearCache</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Toggle Essential</label>
+		<tip>Toggle essential columns only</tip>
+		<icon1>#MExt:Toggle_Off</icon1>
+		<function type="normal">
+			<instruction>ME_ToggleEssentialColumns</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Toggle Optional</label>
+		<tip>Toggle optional columns</tip>
+		<icon1>#MExt:Toggle_On</icon1>
+		<function type="normal">
+			<instruction>ME_ToggleOptionalColumns</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Toggle Other</label>
+		<tip>Toggle other columns</tip>
+		<icon1>#MExt:Toggle_On</icon1>
+		<function type="normal">
+			<instruction>ME_ToggleOtherColumns</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" separate="yes" textcol="none">
+		<label>MExt Toggle Verbose</label>
+		<tip>Toggle verbose columns</tip>
+		<icon1>#MExt:Toggle_On</icon1>
+		<function type="normal">
+			<instruction>ME_ToggleVerboseColumns</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Dump Metadata</label>
+		<tip>Dump video and audio metadata stored in ADS to DOpus output window</tip>
+		<icon1>#MExt:Info</icon1>
+		<function type="normal">
+			<instruction>ME_ADSDump</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" separate="yes" textcol="none">
+		<label>MExt Copy Metadata</label>
+		<tip>Copy video and audio metadata stored in ADS to clipboard</tip>
+		<icon1>#MExt:Info</icon1>
+		<function type="normal">
+			<instruction>ME_ADSCopy</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Dump MediaInfo</label>
+		<tip>Dump video and audio metadata (read by MediaInfo) to DOpus output window, without writing it to the ADS stream</tip>
+		<icon1>#MExt:Info</icon1>
+		<function type="normal">
+			<instruction>ME_MediaInfoDump</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" separate="yes" textcol="none">
+		<label>MExt Copy MediaInfo</label>
+		<tip>Copy video and audio metadata (read by MediaInfo) to Clipboard, without writing it to the ADS stream</tip>
+		<icon1>#MExt:Info</icon1>
+		<function type="normal">
+			<instruction>ME_MediaInfoCopy</instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" separate="yes" textcol="none">
+		<label>MExt Validate Config</label>
+		<tip>Validate current configuration</tip>
+		<icon1>#MExt:Settings</icon1>
+		<function type="normal">
+			<instruction>ME_ConfigValidate DEBUG </instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" textcol="none">
+		<label>MExt Estimate Bitrate</label>
+		<tip>Calculate estimated bitrates for various target Bitrate/Pixel values</tip>
+		<icon1>#MExt:Calculate</icon1>
+		<function type="normal">
+			<instruction>ME_EstimateBitrates</instruction>
+		</function>
+	</button>
+</button>

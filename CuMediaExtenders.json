@@ -1,0 +1,9 @@
+{
+    "colPrefix": ".",
+    "colRepl": {
+        "MExt_HasMetadata": "ADS Exists",
+        "MExt_CombinedDuration": "Duration",
+        "MExt_GrossByterate": "Byterate",
+        "MExt_MultiAudio": "Multiple Audio Tracks"
+    }
+}

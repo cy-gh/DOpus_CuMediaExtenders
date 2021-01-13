@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iconset name="MExt">
+<display_name>Media Extenders Icons</display_name>
+<set size="small" width="20" height="20" filename="ME_20_Calculate.png"     ><icon row="1" col="1" name="Calculate"     /></set>
+<set size="small" width="20" height="20" filename="ME_20_ClearCache.png"    ><icon row="1" col="1" name="ClearCache"    /></set>
+<set size="small" width="20" height="20" filename="ME_20_Add.png"           ><icon row="1" col="1" name="Column_Add"    /></set>
+<set size="small" width="20" height="20" filename="ME_20_Remove.png"        ><icon row="1" col="1" name="Column_Remove" /></set>
+<set size="small" width="20" height="20" filename="ME_20_Delete.png"        ><icon row="1" col="1" name="Delete"        /></set>
+<set size="small" width="20" height="20" filename="ME_20_Info.png"          ><icon row="1" col="1" name="Info"          /></set>
+<set size="small" width="20" height="20" filename="ME_20_Settings.png"      ><icon row="1" col="1" name="Settings"      /></set>
+<set size="small" width="20" height="20" filename="ME_20_Toggle_Off.png"    ><icon row="1" col="1" name="Toggle_Off"    /></set>
+<set size="small" width="20" height="20" filename="ME_20_Toggle_On.png"     ><icon row="1" col="1" name="Toggle_On"     /></set>
+<set size="small" width="20" height="20" filename="ME_20_Update.png"        ><icon row="1" col="1" name="Update"        /></set>
+<set size="large" width="32" height="32" filename="ME_32_Calculate.png"     ><icon row="1" col="1" name="Calculate"     /></set>
+<set size="large" width="32" height="32" filename="ME_32_ClearCache.png"    ><icon row="1" col="1" name="ClearCache"    /></set>
+<set size="large" width="32" height="32" filename="ME_32_Add.png"           ><icon row="1" col="1" name="Add"           /></set>
+<set size="large" width="32" height="32" filename="ME_32_Remove.png"        ><icon row="1" col="1" name="Remove"        /></set>
+<set size="large" width="32" height="32" filename="ME_32_Delete.png"        ><icon row="1" col="1" name="Delete"        /></set>
+<set size="large" width="32" height="32" filename="ME_32_Info.png"          ><icon row="1" col="1" name="Info"          /></set>
+<set size="large" width="32" height="32" filename="ME_32_Settings.png"      ><icon row="1" col="1" name="Settings"      /></set>
+<set size="large" width="32" height="32" filename="ME_32_Toggle_Off.png"    ><icon row="1" col="1" name="Toggle_Off"    /></set>
+<set size="large" width="32" height="32" filename="ME_32_Toggle_On.png"     ><icon row="1" col="1" name="Toggle_On"     /></set>
+<set size="large" width="32" height="32" filename="ME_32_Update.png"        ><icon row="1" col="1" name="Update"        /></set>
+</iconset>
