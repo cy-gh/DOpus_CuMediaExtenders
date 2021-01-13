@@ -1,5 +1,5 @@
 # CuMediaExtenders
-Video &amp; audio extended script fields &amp; columns for the marvellous [Directory Opus file manager](https://www.gpsoft.com.au/), with MediaInfo &amp; NTFS ADS backend
+Video &amp; audio extended script fields &amp; columns for the marvellous [Directory Opus file manager](https://www.gpsoft.com.au/), with MediaInfo &amp; NTFS ADS backend.
 
 CuMediaExtenders is a script-addin for DOpus for video and audio files, using MediaInfo and NTFS ADS as its backend.
 It complements & enhances DOpus built-in fields, instead of completely replacing them.
