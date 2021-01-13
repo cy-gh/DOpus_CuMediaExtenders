@@ -1,49 +1,4 @@
-﻿/*
- * TODO:
- *
- *		+ Replace Date formatter with DOpus.Date() object?
- *		+ Replace ExpandEnvironmentStrings with FSUtil.Resolve()
- * 		+ Convert logger to object
- * 		+ Convert config to object with
- * 			getter with auto-validate
- * 			setter with auto-validate
- * 			validate()
- * 		+ Fix OnScriptConfigChange()
- *		+ Fix reading user config
- * 		+ Replace old config variables with new config object
- *		+ Check if config is valid before starting actions
- *		+ Implement TDuration, VDuration & Duration (Combo)
- *		+ Implement other columns
- *		+ Customizable column headers
- *		+ Leanify HEREDOCS / about texts
- *			. add minimal requirements (MediaInfo)
- * 		- Revise log entries:
- * 			- logger.force
- * 			- logger.error
- * 			- logger.warn
- * 			- logger.normal
- * 			- logger.verbose
- * 		- Test
- * 			- all config options
- * 			- main commands
- * 			- optional commands
- * 			- validity of columns
- *
- */
-
-String.prototype.normalizeLeadingWhiteSpace = function (str) {
-	return this.replace(/^\t\t/mg, '  ').replace(/^\t/mg, '');
-};
-String.prototype.substituteVars = function () {
-	return this.replace(/\${([^}]+)}/g, function (match, p1) {
-		return typeof eval(p1) !== 'undefined'
-			? eval(p1)
-			: 'undefined'
-			;
-	});
-};
-
- // GLOBAL objects
+﻿ // GLOBAL objects
  {
 	/**
 	 * do not touch
@@ -71,6 +26,18 @@ String.prototype.substituteVars = function () {
 	var TEXT_ENCODING = { 'utf8': 1, 'utf16': 2 };
 }
 
+
+String.prototype.normalizeLeadingWhiteSpace = function (str) {
+	return this.replace(/^\t\t/mg, '  ').replace(/^\t/mg, '');
+};
+String.prototype.substituteVars = function () {
+	return this.replace(/\${([^}]+)}/g, function (match, p1) {
+		return typeof eval(p1) !== 'undefined'
+			? eval(p1)
+			: 'undefined'
+			;
+	});
+};
 // HEREDOC objects
 var HEREDOCS = {
 	// ugly but functional; JScript under Windows lacks many cool features of JavaScript
