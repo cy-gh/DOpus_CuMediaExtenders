@@ -1,7 +1,5 @@
 # CuMediaExtenders
-Video &amp; audio extended script fields &amp; columns for the marvellous [Directory Opus file manager](https://www.gpsoft.com.au/), with MediaInfo &amp; NTFS ADS backend.
-
-CuMediaExtenders is a script-addin for DOpus for video and audio files, using MediaInfo and NTFS ADS as its backend.
+CuMediaExtenders is a script-addin for video and audio files for the marvellous [Directory Opus file manager](https://www.gpsoft.com.au/), using MediaInfo &amp; NTFS ADS as its backend.
 It complements & enhances DOpus built-in fields, instead of completely replacing them.
 
 As of v0.9/20210113 you get:
@@ -434,13 +432,13 @@ The "codec" fields can be quite overwhelming. Before you start "but FourCC..." s
 
 Since video encoding is a world of its own and each codec has a gazillion options and combinations, you have the choice to customize the magical "codec" info as you please. 
 
-Below is the "Additional Info" setting which affects only a handful of codecs like AAC, DTS, Atmos. This info comes straight from MediaInfo, except Opus files, which the script fills separately for you.
+Below is the "Additional Info" setting which affects only a handful of codecs like AAC, DTS, Atmos. This info comes straight from MediaInfo, except Opus files, which the script fills separately for you. Note how "AAC (LC SBR)" becomes "AAC" and so on, but not MP3.
 
 ![18](./Screenshots/18.png)
 
 
 
-You might be confused why MP3 (v1) was identical on both sides in the screenshot above. You can use the "short versions" as seen below.
+You might be confused why MP3 (v1) was identical on both sides in the screenshot above, because this is technically not from "Additional Info" field, but you can still use the "short versions" as seen below.
 
 ![19](./Screenshots/19.png)
 
@@ -448,7 +446,7 @@ You might be confused why MP3 (v1) was identical on both sides in the screenshot
 
 
 
-Where does the "short versions" of codecs come from? From this list. It's not easy to use, but quite powerful if you take the time to look into the existing ADS data (and there are 2 buttons for that) and adjust the LOOKUP_CODECS (must be valid JSON).
+Where do these "short versions" of codecs come from? From this list. It's not easy to use, but quite powerful if you take the time to look into the existing ADS data (and there are 2 buttons for that) and adjust the LOOKUP_CODECS (must be valid JSON).
 
 ![20](./Screenshots/20.png)
 
