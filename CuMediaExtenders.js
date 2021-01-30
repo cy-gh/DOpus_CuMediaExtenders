@@ -3335,24 +3335,25 @@ function OnME_Update(scriptCmdData) {
 			// for Opus files
 			if (out_obj.extra && out_obj.extra.ENCODER_OPTIONS) {
 				logger.normal("Opus -- Encoder Options: " + out_obj.extra.ENCODER_OPTIONS);
-			}
-			if (out_obj.extra.ENCODER_OPTIONS.indexOf('--cvbr') >= 0) {
+				if (out_obj.extra.ENCODER_OPTIONS.indexOf('--cvbr') >= 0) {
 					out_obj.audio_bitrate_mode = 'VBR';
-			} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--vbr') >= 0) {
-				out_obj.audio_bitrate_mode = 'VBR';
-			} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--cabr') >= 0) {
-				out_obj.audio_bitrate_mode = 'VBR';
-			} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--ccbr') >= 0) {
-				out_obj.audio_bitrate_mode = 'CBR';
-			} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--hard-cbr') >= 0) {
-				out_obj.audio_bitrate_mode = 'CBR';
+				} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--vbr') >= 0) {
+					out_obj.audio_bitrate_mode = 'VBR';
+				} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--cabr') >= 0) {
+					out_obj.audio_bitrate_mode = 'VBR';
+				} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--ccbr') >= 0) {
+					out_obj.audio_bitrate_mode = 'CBR';
+				} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--hard-cbr') >= 0) {
+					out_obj.audio_bitrate_mode = 'CBR';
+				}
+				if (out_obj.extra.ENCODER_OPTIONS.indexOf('--music') >= 0) {
+					out_obj.audio_format_additional += 'Music';
+				} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--speech') >= 0) {
+					out_obj.audio_format_additional += 'Speech';
+				}
+				logger.normal('Opus -- Determined BR mode: ' + out_obj.audio_bitrate_mode + "\nFormat Additional: " + out_obj.audio_format_additional);
 			}
-			if (out_obj.extra.ENCODER_OPTIONS.indexOf('--music') >= 0) {
-				out_obj.audio_format_additional += 'Music';
-			} else if (out_obj.extra.ENCODER_OPTIONS.indexOf('--speech') >= 0) {
-				out_obj.audio_format_additional += 'Speech';
-			}
-			logger.normal('Opus -- Determined BR mode: ' + out_obj.audio_bitrate_mode + "\nFormat Additional: " + out_obj.audio_format_additional);
+
 		}
 
 		logger.verbose(JSON.stringify(out_obj));
