@@ -3281,13 +3281,13 @@ function OnMExt_MultiColRead(scriptColData) {
 
 	} // for enum
 
-	// DOpus.output('name_cleanup: ' + JSON.stringify(config.get('name_cleanup'), null, 4));
-	if (config.get('name_cleanup')) {
-		key = 'MExt_CleanedUpName';
-		outstr = getCleanName(selected_item, _vcodec, _acodec, _resolution);
-		scriptColData.columns(key).group = 'Clean Name: ' + outstr;
-		scriptColData.columns(key).value = outstr;
-	}
+	// // DOpus.output('name_cleanup: ' + JSON.stringify(config.get('name_cleanup'), null, 4));
+	// if (config.get('name_cleanup')) {
+	// 	key = 'MExt_CleanedUpName';
+	// 	outstr = getCleanName(selected_item, _vcodec, _acodec, _resolution);
+	// 	scriptColData.columns(key).group = 'Clean Name: ' + outstr;
+	// 	scriptColData.columns(key).value = outstr;
+	// }
 
 
 	var ts2 = new Date().getTime();

@@ -1,0 +1,4 @@
+@echo off
+*del /qfkz CuMediaExtenders.osp > NUL:
+winrar a -ep1 -t CuMediaExtenders.zip CuMediaExtenders*.* Icons _CuMediaExtenders_Package.btm
+*ren CuMediaExtenders.zip CuMediaExtenders.osp
