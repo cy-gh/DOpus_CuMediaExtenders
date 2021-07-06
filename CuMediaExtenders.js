@@ -1,17 +1,18 @@
-﻿ // GLOBAL objects
- {
+﻿// @ts-nocheck
+ // GLOBAL objects
+{
 	/**
 	 * do not touch
 	 */
 	var Global = { };
 	Global.SCRIPT_NAME        = 'CuMediaExtenders'; // WARNING: if you change this after initial use you have to reconfigure your columns, infotips, rename scripts...
 	Global.SCRIPT_NAME_SHORT  = 'CME';
-	Global.SCRIPT_VERSION     = 'v0.9';
+	Global.SCRIPT_VERSION     = 'v0.91';
 	Global.SCRIPT_COPYRIGHT   = '© 2021 cuneytyilmaz.com'
 	Global.SCRIPT_URL         = 'https://github.com/cy-gh/DOpus_CuMediaExtenders/';
 	Global.SCRIPT_DESC        = 'Extended fields for multimedia files (movie & audio) with the help of MediaInfo & NTFS ADS';
 	Global.SCRIPT_MIN_VERSION = '12.0';
-	Global.SCRIPT_DATE        = '20210113';
+	Global.SCRIPT_DATE        = '20210706';
 	Global.SCRIPT_GROUP       = 'cuneytyilmaz.com';
 	Global.SCRIPT_PREFIX      = 'MExt';				// prefix for field checks, log outputs, progress windows, etc. - do not touch
 	Global.SCRIPT_LICENSE     = 'Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)';
@@ -1286,9 +1287,11 @@ var config = (function () {
 		"MExt_VDimensions"                : "essential",
 		"MExt_VResolution"                : "essential",
 		"MExt_VFrameRate"                 : "essential",
+		"MExt_VFrameCount"                : "essential",
 		"MExt_VARCombined"                : "essential",
 		"MExt_MultiAudio"                 : "essential",
 		"MExt_AudioChannels"              : "essential",
+		"MExt_AudioLang"                  : "essential",
 		"MExt_AudioBitrateMode"           : "essential",
 		"MExt_AudioCompressionMode"       : "essential",
 		"MExt_HasReplayGain"              : "essential",
@@ -1316,6 +1319,7 @@ var config = (function () {
 		"MExt_HelperContainer"            : "other",
 		"MExt_HelperVideoCodec"           : "other",
 		"MExt_HelperAudioCodec"           : "other",
+		"MExt_CleanedUpName"              : "other",
 
 		"MExt_ADSDataFormatted"           : "verbose",
 		"MExt_ADSDataRaw"                 : "verbose"
@@ -1450,17 +1454,19 @@ var config = (function () {
 		// that is why you should prefer AAC-MP4A-40-2 or AAC to MKA-AAC-MP4A-40-2 or MP4-AAC-MP4A-40-2
 		// otherwise you would have to re-declare the same codecs over and over for every movie container
 		// use one of the helper columns if you find something which is not shown to your liking
+		"AV1-AV01"                                               : "AV1",
+		"AV1"                                                    : "AV1",
 		"AVC-AVC1-X264"                                          : ["H264 (x264)", "H264"],
 		"AVC-H264-X264"                                          : ["H264 (x264)", "H264"],
 		"AVC-V_MPEG4/ISO/AVC-X264"                               : ["H264 (x264)", "H264"],
 		"AVC-X264"                                               : ["H264 (x264)", "H264"],
 		"AVC-AVC1"                                               : "H264",
 		"AVC"                                                    : "H264",
-		"HEVC-HVC1-X265"                                         : ["HEVC (x265)", "HEVC"],
-		"HEVC-V_MPEGH/ISO/HEVC-X265"                             : ["HEVC (x265)", "HEVC"],
-		"HEVC-X265"                                              : ["HEVC (x265)", "HEVC"],
-		"HEVC-HVC1"                                              : "HEVC",
-		"HEVC"                                                   : "HEVC",
+		"HEVC-HVC1-X265"                                         : ["H265 (x265)", "H265"],
+		"HEVC-V_MPEGH/ISO/HEVC-X265"                             : ["H265 (x265)", "H265"],
+		"HEVC-X265"                                              : ["H265 (x265)", "H265"],
+		"HEVC-HVC1"                                              : "H265",
+		"HEVC"                                                   : "H265",
 
 		"HUFFYUV-HFYU"                                           : ["HuffYUV", "HFYU"],
 		"HUFFYUV-V_MS/VFW/FOURCC / HFYU"                         : ["HuffYUV", "HFYU"],
@@ -1474,8 +1480,13 @@ var config = (function () {
 		"MPEG-4 VISUAL-MP4V-20"                                  : ["M4S2/MP4V", "MP4V"],
 		"MPEG-4 VISUAL-MP42"                                     : "MP42",
 		"MPEG-4 VISUAL-V_MS/VFW/FOURCC / MP42"                   : "MP42",
+		"MPEG-4 VISUAL-V_MS/VFW/FOURCC / XVID"                   : "XviD",
+		"MPEG-4 VISUAL-V_MS/VFW/FOURCC / DIV3"                   : "DivX",
+		"MPEG-4 VISUAL-V_MS/VFW/FOURCC / DIVX"                   : "DivX",
+		"MPEG-4 VISUAL-V_MS/VFW/FOURCC / DX50"                   : "DivX5",
 		"MPEG-4 VISUAL-MP43"                                     : "MP43",
 		"MPEG-4 VISUAL-XVID"                                     : "XviD",
+		"MPEG-4 VISUAL-DIV3"                                     : "DivX",
 		"XVID-XVID"                                              : "XviD",
 		"XVID"                                                   : "XviD",
 		"MPEG VIDEO-MP4V-6A"                                     : "MPG1",
@@ -1492,6 +1503,7 @@ var config = (function () {
 		"H.263"                                                  : "H263",
 		"VC-1-WMV3"                                              : ["WMV3 (VC1)", "WMV3"],
 		"VC-1"                                                   : "WMV3",
+		"V_QUICKTIME"                                            : "",
 
 		// All fields below are first upper-cased then probed
 		//
@@ -1515,6 +1527,9 @@ var config = (function () {
 		"WMA-A"                                                  : ["WMA (v9 Voice)", "WMA"],
 		"WMA"                                                    : ["WMA", "WMA"],
 
+		"AC-3-A_EAC3"                                            : ["AC3 (Dolby Digital Plus)", "EAC3"],
+		"E-AC-3-A_EAC3"                                          : ["AC3 (Dolby Digital Plus)", "EAC3"],
+
 		"AC-3----DOLBY DIGITAL"                                  : ["AC3 (Dolby Digital)", "AC3"],
 		"AC-3"                                                   : "AC3",
 
@@ -1536,7 +1551,7 @@ var config = (function () {
 		"ALAC-ALAC"                                              : ["ALAC (Apple Lossless)","ALAC"],
 		"ALAC"                                                   : ["ALAC (Apple Lossless)","ALAC"],
 
-		"MLP FBA"                                                : ["Atmos TrueHD", "Atmos"],
+		"MLP FBA"                                                : ["Dolby TrueHD", "TrueHD"],
 		"MUSEPACK SV8"                                           : ["Musepack", "MPC"],
 
 		// MPEG audio is major PITA like MPEG video!
@@ -1761,6 +1776,48 @@ var config = (function () {
 	JSON.stringify(JSON.parse(config_file_contents)); // test parseability on script load, do not remove
 	config.addString('ref_config_file', config_file_contents.normalizeLeadingWhiteSpace(), 'REF_CONFIG_FILE');
 
+
+
+
+	/**
+	 * name cleanup array
+	 *
+	 * use SD, HD-Ready, HD, UHD, 4K, 8K, etc. if you like
+	 *
+	 * ADJUST AS YOU SEE FIT
+	 */
+	var name_cleanup = function(){return{
+		// This is just the help variable for your reference
+		// (this is not valid JSON but makes it possible for me to show you more info)
+		//
+		// When you edit the real variable, just make sure it is valid JSON:
+		// no single quotes, only double quotes, no comments and no trailing , in last element
+		//
+		// nameOnly applies to the name part of the file and extOnly to the extension
+		"nameOnly": [
+			// video codecs
+			["/x264|x265|H264|H265|DX50|DivX5|DivX4|DivX|XviD|VP9|VP6F|FLV1|HEVC|MPEG4|MP4V|MP42/ig",      ""],
+			// audio codecs
+			["/AAC|AC3|DTS|MP3|OGG/ig",                                                          ""],
+			// resolutions
+			["/240p|320p|360p|480p|540p|640p|720p|960p|1080p|1440p|2160p|4K|UHD/ig",             ""],
+			["/(_|\.)/g",                                                                        " " ],
+			["/(\d+).+$/g",                                                                      "$1" ],
+			// normalize whitespace after all the replacements above
+			["/\s+/g",                                                                           " " ],
+			["/-\s*-/g",                                                                         "-" ]
+		],
+		"extOnly": [
+		]
+		// do not put , in the last line
+	}
+	}.toString().slice(17, -3);
+	JSON.stringify(JSON.parse(name_cleanup)); // test parseability on script load, do not remove
+	config.addString('ref_name_cleanup', name_cleanup.normalizeLeadingWhiteSpace(), 'REF_NAME_CLEANUP');
+	config.addPOJO('name_cleanup', JSON.parse(name_cleanup), 'NAME_CLEANUP');
+
+
+
 	// bindings for these 2 are unnecessary and ignored
 	config.addString('config_file_dir_resolved', config_file_dir_resolved, '');
 	config.addString('config_file_name', config_file_name, '');
@@ -1800,8 +1857,10 @@ function OnInit(initData) {
 function addToConfigVar(initData, group, name, desc, value) {
 	cfg							= config.getBinding(name);;
 	initData.Config[cfg]		= value || config.get(name);
-	initData.config_desc(cfg)	= desc;
-	initData.config_groups(cfg)	= group;
+	// initData.config_desc(cfg)	= desc;
+	// initData.config_groups(cfg)	= group;
+	initData.config_desc.set(cfg, desc);
+	initData.config_groups.set(cfg, group);
 }
 // internal method called by OnInit()
 function addCommand(initData, name, method, template, icon, label, desc) {
@@ -1815,8 +1874,8 @@ function addCommand(initData, name, method, template, icon, label, desc) {
 }
 // internal method called by OnInit()
 function addColumn(initData, method, name, label, justify, autogroup, autorefresh, multicol) {
-	var colPrefix = 'ME ';
-	var extConfig = config.get('ext_config_pojo');
+	var colPrefix   = 'ME ';
+	var extConfig   = config.get('ext_config_pojo');
 	var col         = initData.AddColumn();
 	col.method      = method;
 	col.name        = name;
@@ -1929,7 +1988,10 @@ function _initalizeConfigVars(initData) {
 	addToConfigVar(initData, GROUP, 'resolution_append_vertical',
 		'Append (Vertical) to resolutions if height > width'
 	);
-
+	addToConfigVar(initData, GROUP, 'name_cleanup',
+		'Name cleanup regexes for the \'Clean Name\' column (JSON)\nMust be valid JSON, see reference section below',
+		JSON.stringify(config.get('name_cleanup'), null, 4).replace(/\n/mg, "\r\n")
+	);
 
 
 	GROUP = 'Lookup/Translation - ADS UPDATE necessary!';
@@ -2003,6 +2065,10 @@ function _initalizeConfigVars(initData) {
 		// config.get('ref_config_file').replace(/\n/mg, "\r\n")
 		//JSON.stringify(config.get('ref_config_file'), null, 4).replace(/\n/mg, "\r\n")
 	);
+	addToConfigVar(initData, GROUP, 'ref_name_cleanup',
+		_prefix + 'Name cleanup regexes help'
+	);
+
 }
 // internal method called by OnInit()
 function _initializeCommands(initData) {
@@ -2024,7 +2090,7 @@ function _initializeCommands(initData) {
 		'ME_Update',
 		'OnME_Update',
 		'FILE/K',
-		'Update',
+		'AddUpdate',
 		'MExt Update Metadata',
 		'Update video and audio metadata (read by MediaInfo) in custom ADS stream');
 
@@ -2088,7 +2154,7 @@ function _initializeCommands(initData) {
 		'ME_ToggleEssentialColumns',
 		'OnME_ToggleEssentialColumns',
 		'',
-		'Toggle_Off',
+		'ToggleGroup1',
 		'MExt Toggle Essential',
 		'Toggle essential columns only');
 
@@ -2096,7 +2162,7 @@ function _initializeCommands(initData) {
 		'ME_ToggleOptionalColumns',
 		'OnME_ToggleOptionalColumns',
 		'',
-		'Toggle_On',
+		'ToggleGroup2',
 		'MExt Toggle Optional',
 		'Toggle optional columns');
 
@@ -2104,7 +2170,7 @@ function _initializeCommands(initData) {
 		'ME_ToggleOtherColumns',
 		'OnME_ToggleOtherColumns',
 		'',
-		'Toggle_On',
+		'ToggleGroup3',
 		'MExt Toggle Other',
 		'Toggle other columns');
 
@@ -2112,7 +2178,7 @@ function _initializeCommands(initData) {
 		'ME_ToggleVerboseColumns',
 		'OnME_ToggleVerboseColumns',
 		'',
-		'Settings',
+		'ToggleGroup4',
 		'MExt Toggle Verbose',
 		'Toggle verbose columns');
 
@@ -2250,6 +2316,12 @@ function _initializeColumns(initData) {
 
 	addColumn(initData,
 		'OnMExt_MultiColRead',
+		'MExt_AudioLang',
+		'Audio Language',
+		'left', false, true, true);
+
+	addColumn(initData,
+		'OnMExt_MultiColRead',
 		'MExt_VARDisplay',
 		'Aspect Ratio (Display)',
 		'right', false, true, true);
@@ -2284,6 +2356,12 @@ function _initializeColumns(initData) {
 		'OnMExt_MultiColRead',
 		'MExt_VFrameRate',
 		'Frame Rate',
+		'left', false, true, true);
+
+	addColumn(initData,
+		'OnMExt_MultiColRead',
+		'MExt_VFrameCount',
+		'Frame Count',
 		'left', false, true, true);
 
 	addColumn(initData,
@@ -2383,6 +2461,12 @@ function _initializeColumns(initData) {
 		'Helper (ACodec)',
 		'left', true, true, true);
 
+
+	addColumn(initData,
+		'OnMExt_MultiColRead',
+		'MExt_CleanedUpName',
+		'Helper (CleanName)',
+		'left', true, true, true);
 
 
 	addColumn(initData,
@@ -2495,6 +2579,9 @@ function OnScriptConfigChange(cfgChangeData) {
 				config.safeConvertToJSON(cfgval) && config.set('fields_other', JSON.parse(cfgval)); break;
 			case 'TOGGLEABLE_FIELDS_VERBOSE':
 				config.safeConvertToJSON(cfgval) && config.set('fields_verbose', JSON.parse(cfgval)); break;
+
+			case 'NAME_CLEANUP':
+				config.safeConvertToJSON(cfgval) && config.set('name_cleanup', JSON.parse(cfgval)); break;
 
 
 			// case 'MEDIAINFO_PATH':
@@ -2611,6 +2698,8 @@ function OnMExt_MultiColRead(scriptColData) {
 		return;
 	}
 
+	var _vcodec, _acodec, _resolution;
+
 	// iterate over requested columns
 	for (var e = new Enumerator(scriptColData.columns); !e.atEnd(); e.moveNext()) {
 		var key = e.item();
@@ -2675,6 +2764,8 @@ function OnMExt_MultiColRead(scriptColData) {
 				scriptColData.columns(key).value = outstr;
 				break;
 
+
+			case 'MExt_CleanedUpName':
 			case 'MExt_VideoCodec':
 				if (!item_props.video_count) {
 					scriptColData.columns(key).sort = 0;
@@ -2712,8 +2803,11 @@ function OnMExt_MultiColRead(scriptColData) {
 							);
 				scriptColData.columns(key).group = 'Video Codec: ' + outstr;
 				scriptColData.columns(key).value = outstr;
+				_vcodec = outstr; // buffer for 'Clean Name'
 				break;
 
+
+			case 'MExt_CleanedUpName':
 			case 'MExt_AudioCodec':
 				if (!item_props.audio_count) {
 					scriptColData.columns(key).sort = 0;
@@ -2762,7 +2856,8 @@ function OnMExt_MultiColRead(scriptColData) {
 					outstr += (item_props.audio_format_additional ? ' (' + item_props.audio_format_additional + ')' : '');
 				}
 				scriptColData.columns(key).group = 'Audio Codec: ' + outstr;
-                scriptColData.columns(key).value = outstr;
+				scriptColData.columns(key).value = outstr;
+				_acodec = outstr; // buffer for 'Clean Name'
                 break;
 
 			case 'MExt_VideoBitrate':
@@ -2976,6 +3071,14 @@ function OnMExt_MultiColRead(scriptColData) {
 				scriptColData.columns(key).value = outstr;
 				break;
 
+
+			case 'MExt_AudioLang':
+				if (!item_props.text_count) { scriptColData.columns(key).sort = 0; break; }
+				outstr = item_props.audio_language ? item_props.audio_language.toUpperCase() : '';
+				scriptColData.columns(key).group = 'Audio Language: ' + outstr;
+				scriptColData.columns(key).value = outstr;
+				break;
+
 			case 'MExt_VARDisplay':
 				if (!item_props.video_count) { scriptColData.columns(key).sort = 0; break; }
 				outstr = item_props.video_display_AR || '';
@@ -3017,6 +3120,8 @@ function OnMExt_MultiColRead(scriptColData) {
 				scriptColData.columns(key).value = outstr;
 				break;
 
+
+			case 'MExt_CleanedUpName':
 			case 'MExt_VResolution':
 				if (!item_props.video_count || !item_props.video_width || !item_props.video_height) { scriptColData.columns(key).sort = 0; break; }
 				var res_val = Math.min(item_props.video_height, item_props.video_width);
@@ -3032,6 +3137,7 @@ function OnMExt_MultiColRead(scriptColData) {
 				}
 				scriptColData.columns(key).group = 'Resolution: ' + outstr;
 				scriptColData.columns(key).value = outstr;
+				_resolution = outstr; // buffer for 'Clean Name'
 				break;
 
 			case 'MExt_VFrameRate':
@@ -3041,6 +3147,13 @@ function OnMExt_MultiColRead(scriptColData) {
 				// Variant 2: default to DOpus value - not tested
 				// outstr = selected_item.metadata.video.framerate || (item_props.video_framerate ? item_props.video_framerate + ' fps' : '');
 				scriptColData.columns(key).group = 'Frame Rate: ' + outstr;
+				scriptColData.columns(key).value = outstr;
+				break;
+
+			case 'MExt_VFrameCount':
+				if (!item_props.video_count) { scriptColData.columns(key).sort = 0; break; }
+				outstr = item_props.video_framecount ? item_props.video_framecount : '' ;
+				scriptColData.columns(key).group = 'Frame Count: ' + outstr;
 				scriptColData.columns(key).value = outstr;
 				break;
 
@@ -3165,11 +3278,63 @@ function OnMExt_MultiColRead(scriptColData) {
                 outstr = '';
                 // nothing, default to empty string
 		} // switch
+
 	} // for enum
+
+	// DOpus.output('name_cleanup: ' + JSON.stringify(config.get('name_cleanup'), null, 4));
+	if (config.get('name_cleanup')) {
+		key = 'MExt_CleanedUpName';
+		outstr = getCleanName(selected_item, _vcodec, _acodec, _resolution);
+		scriptColData.columns(key).group = 'Clean Name: ' + outstr;
+		scriptColData.columns(key).value = outstr;
+	}
+
+
 	var ts2 = new Date().getTime();
 	logger.verbose('OnMExt_MultiColRead() -- Elapsed: ' + (ts2 - ts1) + ', current: ' + ts2);
 }
 
+function getCleanName(oItem, sVCodec, sACodec, sResolution) {
+	// DOpus.output('oItem.name_stem: ' + oItem.name_stem + ' - ' + sVCodec  + ' ' + sACodec + ' ' + sResolution);
+
+	var reDateMatcher = new RegExp(/^(.+?)\s*(\d{4})/);
+
+	var oldNameStem, oldExt, newNameStem, newExt;
+    // If we're renaming a file then remove the extension from the end and save it for later.
+	if (oItem.is_dir || oItem.is_junction || oItem.is_reparse || oItem.is_symlink) {
+		return oItem.name;
+    } else {
+        oldNameStem = oItem.name_stem;
+        oldExt      = oItem.ext;
+	}
+
+	var nameCleanupRegexes = config.get('name_cleanup'),
+		arrNameOnly        = nameCleanupRegexes.nameOnly,
+		arrExtOnly         = nameCleanupRegexes.extOnly;
+
+	function massREReplace(str, arrRegexps) {
+		var out = str;
+		for (var i = 0; i < arrRegexps.length; i++) {
+			var r = arrRegexps[i];
+			out = out.replace(new RegExp(r[0], r[1]), r[2]);
+		}
+		return out;
+	}
+
+	newNameStem = massREReplace(oldNameStem, arrNameOnly);
+    newExt      = massREReplace(oldExt,      arrExtOnly);
+
+    // now that we have the names, find the year
+    var year = newNameStem.match(reDateMatcher);
+	if (year) {
+		newNameStem = year[1] + ' - ' + year[2] + ' - ' + sVCodec + ' ' + sACodec + ' ' + sResolution;
+		// get rid of extra dash's if the file was already renamed
+		newNameStem = newNameStem.replace(/-\s*-/g, '-');
+	}
+
+    return newNameStem + newExt;
+
+}
 
 // UPDATE METADATA
 // called by user command, button, etc.
@@ -3280,6 +3445,7 @@ function OnME_Update(scriptCmdData) {
 					out_obj.video_width				= parseInt(track['Width'])					|| 0;
 					out_obj.video_height			= parseInt(track['Height'])					|| 0;
 					out_obj.video_framerate			= parseFloat(track['FrameRate'])			|| 0;
+					out_obj.video_framecount		= parseFloat(track['FrameCount'])			|| 0;
 					out_obj.video_display_AR		= parseFloat(track['DisplayAspectRatio'])	|| 0;
 					out_obj.video_compression_mode	= track['Compression_Mode']					|| '';
 					out_obj.video_format_additional = track['Format_AdditionalFeatures']		|| '';
@@ -3292,6 +3458,7 @@ function OnME_Update(scriptCmdData) {
 					if (out_obj.audio_format) break;		// read only 1st audio track
 					out_obj.audio_format			= track['Format'] 							|| '';
 					out_obj.audio_codec 			= track['CodecID'] 							|| '';
+					out_obj.audio_language 			= track['Language'] 						|| 'und';
 					out_obj.audio_duration			= parseFloat(track['Duration'])				|| 0;
 					// out_obj.audio_bitrate 			= parseInt(track['BitRate'])				|| parseInt(track['extra'] && track['extra']['FromStats_BitRate']) || (out_obj.video_count === 0 ? out_obj.overall_bitrate : 0) || out_obj.audio_bitrate || 0;
 					out_obj.audio_bitrate 			= parseInt(track['BitRate'])				|| parseInt(track['extra'] && track['extra']['FromStats_BitRate']) || out_obj.audio_bitrate || 0;
@@ -3531,6 +3698,7 @@ function OnME_ToggleVerboseColumns(scriptCmdData) {
 function _toggleColumnGroup(groupName, columnsArray, columnAfter) {
 	var col_after = columnAfter.indexOf('MExt_') === 0 ? 'scp:' + Global.SCRIPT_NAME + '/' + columnAfter : columnAfter;
 	var refresh;
+	util.cmdGlobal.clearFiles();
 	for (var i = 0; i < columnsArray.length; i++) {
 		var item = columnsArray[i];
 		refresh = false;
@@ -3541,13 +3709,15 @@ function _toggleColumnGroup(groupName, columnsArray, columnAfter) {
 		logger.info('Toggling col: ' + item);
 		cmd = 'Set COLUMNSTOGGLE=' + item + '(!' + (i+1) + '+' +  col_after + ',*)'; // * is for auto-size
 		logger.verbose('_toggleColumnGroup -- (' + groupName + '):   ' + cmd);
-		util.cmdGlobal.RunCommand(cmd);
-		if (refresh) {
-			Script.RefreshColumn(columnsArray[i]);
-		}
+		util.cmdGlobal.addLine(cmd);
+	}
+	util.cmdGlobal.run();
+	util.cmdGlobal.clear();
+	if (refresh) {
+		// TODO - recheck if this is necessary
+		// Script.RefreshColumn(columnsArray[i]);
 	}
 }
-
 // VALIDATE CONFIG
 function OnME_ConfigValidate(scriptCmdData) {
 	var debug = scriptCmdData.func.args.got_arg.DEBUG;
@@ -4069,7 +4239,7 @@ function SaveMetadataADS(oItem, oJSObject) {
 	var res = SaveFile(rp + ':' + msn, JSON.stringify(oJSObject), TEXT_ENCODING.utf8);
 	if (config.get('keep_orig_modts')) {
 		logger.verbose(rp + ', resetting timestamp to: ' + orig_modify);
-		util.cmdGlobal.RunCommand('SetAttr META "lastmodifieddate:' + orig_modify + '"');
+		util.cmdGlobal.RunCommand('SetAttr MODIFIED "' + orig_modify + '"');
 	}
 	// check if cache is enabled, add/update unconditionally
 	if (config.get('cache_enabled')) {
@@ -4099,7 +4269,7 @@ function DeleteMetadataADS(oItem) {
 	util.cmdGlobal.RunCommand('Delete /quiet /norecycle "' + file_stream + '"');
 	if (config.get('keep_orig_modts')) {
 		logger.verbose(oItem.realpath + ', resetting timestamp to: ' + orig_modify);
-		util.cmdGlobal.RunCommand('SetAttr META "lastmodifieddate:' + orig_modify + '"');
+		util.cmdGlobal.RunCommand('SetAttr MODIFIED "' + orig_modify + '"');
 	}
 	if (config.get('cache_enabled')) {
 		util.sv.Get('cache').erase(rp);
