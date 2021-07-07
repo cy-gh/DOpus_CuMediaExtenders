@@ -4146,9 +4146,14 @@ function getUniqueIDForString(sString) {
     return DOpus.fsUtil().hash(blob, 'md5');
 }
 
+
 // internal method
 // reads raw MediaInfo output for a single file, always reads from disk
 function GetMediaInfoFor(oItem) {
+
+	function removeVolVar(sVar) {
+		util.shellGlobal.Environment("Volatile").remove(sVar);
+	}
     var mediainfo_output;
     var exit_code;
     var cmd;
@@ -4202,7 +4207,7 @@ function GetMediaInfoFor(oItem) {
             // 	sVarName = sPrefix + 'ERR' + i;
             // 	sStdErr += '' + DOpus.fsUtil().resolve('%' + sVarName + '%');
             // 	// delete the var
-            // 	util.shellGlobal.Run('cmd.exe /c set ' + sVarName + '=', 0, true);
+			// removeVolVar(sVarName);
             // }
             // logger.error(oItem.name + ', ' + sStdErr);
             return;
@@ -4214,8 +4219,11 @@ function GetMediaInfoFor(oItem) {
             sVarName = sPrefix + 'OUT' + i;
             mediainfo_output += '' + DOpus.fsUtil().resolve('%' + sVarName + '%');
             // delete the var
-            util.shellGlobal.Run('cmd.exe /c set ' + sVarName + '=', 0, true);
+            removeVolVar(sVarName);
         }
+        removeVolVar(sPrefix + 'EC');
+        removeVolVar(sPrefix + 'OUT0');
+        removeVolVar(sPrefix + 'ERR0');
         logger.normal('...finished');
 
     } else {
