@@ -13,12 +13,12 @@
     var Global = { };
     Global.SCRIPT_NAME        = 'CuMediaExtenders'; // WARNING: if you change this after initial use you have to reconfigure your columns, infotips, rename scripts...
     Global.SCRIPT_NAME_SHORT  = 'CME';
-    Global.SCRIPT_VERSION     = 'v0.92';
+    Global.SCRIPT_VERSION     = 'v0.93';
     Global.SCRIPT_COPYRIGHT   = '© 2021 cuneytyilmaz.com';
     Global.SCRIPT_URL         = 'https://github.com/cy-gh/DOpus_CuMediaExtenders/';
     Global.SCRIPT_DESC        = 'Extended fields for multimedia files (movie & audio) with the help of MediaInfo & NTFS ADS';
     Global.SCRIPT_MIN_VERSION = '12.23';
-    Global.SCRIPT_DATE        = '20210707';
+    Global.SCRIPT_DATE        = '20210713';
     Global.SCRIPT_GROUP       = 'cuneytyilmaz.com';
     Global.SCRIPT_PREFIX      = 'MExt';				// prefix for field checks, log outputs, progress windows, etc. - do not touch
     Global.SCRIPT_LICENSE     = 'Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)';
@@ -34,8 +34,17 @@
 }
 
 
+String.prototype.trim = function () {
+    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+}
 String.prototype.normalizeLeadingWhiteSpace = function () {
-    return this.replace(/^\t\t/mg, '  ').replace(/^\t/mg, '');
+    return this
+        .replace(/^\t\t\t|^ {12}/mg, '§§')
+        .replace(/^\t\t|^ {8}/mg, '§')
+        .replace(/^\t|^ {4}/mg, '')
+        .replace(/§/mg, '  ')
+        .replace(/\n/g, '\r\n')
+        .trim();
 };
 String.prototype.substituteVars = function () {
     return this.replace(/\${([^}]+)}/g, function (match, p1) {
@@ -1331,6 +1340,8 @@ var config = (function () {
         "MExt_AFormatVersion"             : "optional",
         "MExt_AProfile"                   : "optional",
         "MExt_EncoderApp"                 : "optional",
+        "MExt_DateEncoded"                : "optional",
+        "MExt_DateTagged"                 : "optional",
 
         "MExt_HelperContainer"            : "other",
         "MExt_HelperVideoCodec"           : "other",
@@ -1792,14 +1803,27 @@ var config = (function () {
             "MExt_GrossByterate": "Byterate",
             "MExt_MultiAudio": "Multiple Audio Tracks"
             // do not put , in the last line
+        },
+
+        // the following can be used to map vendor-specific fields
+        // which MediaInfo usually puts under "Container.Extra" portion
+        // to user-customizable fields. In order to find out how the fields
+        // are called, you have to check out one of the helper fields and
+        // look for the field "extra" with subitems under it.
+        // this feature is supported only for Container.Extra, in order to
+        // keep things simple, because there can be multiple audio/subtitle tracks,
+        // or even multiple video tracks, but Extra blocks for those are rarely filled.
+        "colExtra": {
+            "com_apple_quicktime_model": "Camera Make",
+            "com_apple_quicktime_software": "Camera Software"
+            // do not put , in the last line
         }
         // do not put , in the last line
     }
     }.toString().slice(17, -3)
-        .substituteVars();
+    .substituteVars();
     JSON.stringify(JSON.parse(config_file_contents)); // test parseability on script load, do not remove
     config.addString('ref_config_file', config_file_contents.normalizeLeadingWhiteSpace(), 'REF_CONFIG_FILE');
-
 
 
 
@@ -1849,8 +1873,6 @@ var config = (function () {
     // do not touch this!
     config.addPOJO('ext_config_pojo', {});
 }
-
-
 
 
 
@@ -1950,7 +1972,7 @@ function _initalizeConfigVars(initData) {
     initData.config_groups	= DOpus.Create.Map();
     var GROUP, _tmp;
 
-    GROUP = ' DO NOT CHANGE UNLESS NECESSARY'; // first char is nbsp
+    GROUP = 'zzDO NOT CHANGE UNLESS NECESSARY';
     addToConfigVar(initData, GROUP, 'MetaStreamName',
         'Name of NTFS stream (ADS) to use\nWARNING: DELETE existing ADS from all files before you change this, otherwise old streams will be orphaned'
     );
@@ -2075,7 +2097,7 @@ function _initalizeConfigVars(initData) {
     );
 
 
-    GROUP = ' Reference Only';	// first char is nbsp
+    GROUP = 'zReference Only';	// first char is nbsp
     // addToConfigVar(initData, GROUP, 'ref_mediainfo_download_url',
     // 	'For your convenience ;), no affect at anything at all\nUse CLI version'
     // );
@@ -2477,6 +2499,18 @@ function _initializeColumns(initData) {
         'Container Encoder App',
         'left', false, true, true);
 
+    addColumn(initData,
+        'OnMExt_MultiColRead',
+        'MExt_DateEncoded',
+        'Container Encoded Date',
+        'left', false, true, true);
+
+    addColumn(initData,
+        'OnMExt_MultiColRead',
+        'MExt_DateTagged',
+        'Container Tagged Date',
+        'left', false, true, true);
+
 
     addColumn(initData,
         'OnMExt_MultiColRead',
@@ -2515,6 +2549,28 @@ function _initializeColumns(initData) {
         'MExt_ADSDataRaw',
         'ADSData (Raw)',
         'left', true, true, true);
+
+
+    // add user-customizable columns from Container.Extra fields
+    // e.g.
+    // "colExtra": {
+    //   "com_apple_quicktime_model": "Camera Make"
+    // }
+    var extConfig = config.get('ext_config_pojo');
+    if (typeof extConfig !== 'undefined' && typeof extConfig.colExtra === 'object') {
+        /** @type {DOpusMap} */
+        var colExtraMap = DOpus.create().map();
+        for(var ecitem in extConfig.colExtra) {
+            DOpus.output('adding custom column: ' + ecitem);
+            addColumn(initData,
+                'OnMExt_MultiColRead',
+                ecitem,
+                extConfig.colExtra[ecitem],
+                'left', true, true, true);
+            colExtraMap.set(ecitem, extConfig.colExtra[ecitem]);
+        }
+        initData.vars.set('colExtraMap', colExtraMap);
+    }
 }
 
 
@@ -2739,6 +2795,7 @@ function OnMExt_MultiColRead(scriptColData) {
     }
 
     var _vcodec, _acodec, _resolution;
+    var colExtraMap = Script.vars.get('colExtraMap');
 
     // iterate over requested columns
     for (var e = new Enumerator(scriptColData.columns); !e.atEnd(); e.moveNext()) {
@@ -3314,8 +3371,30 @@ function OnMExt_MultiColRead(scriptColData) {
                 scriptColData.columns(key).value = outstr;
                 break;
 
+            case 'MExt_DateEncoded':
+                if (!item_props.container_date_encoded) { scriptColData.columns(key).sort = 0; break; }
+                outstr = item_props.container_date_encoded || '';
+                scriptColData.columns(key).group = 'Date Encoded: ' + outstr;
+                scriptColData.columns(key).value = outstr;
+                break;
+
+            case 'MExt_DateTagged':
+                if (!item_props.container_date_tagged) { scriptColData.columns(key).sort = 0; break; }
+                outstr = item_props.container_date_tagged || '';
+                scriptColData.columns(key).group = 'Date Tagged: ' + outstr;
+                scriptColData.columns(key).value = outstr;
+                break;
+
             default:
-                outstr = '';
+                if(colExtraMap.exists(key)){
+                    if (!item_props.extra[key]) { scriptColData.columns(key).sort = 0; break; }
+                    outstr = item_props.extra[key] || '';
+                    scriptColData.columns(key).group = colExtraMap.get(key) + ': ' + outstr;
+                    scriptColData.columns(key).value = outstr;
+                } else {
+                    DOpus.output('nothing found');
+                    outstr = '';
+                }
                 // nothing, default to empty string
         } // switch
 
@@ -3449,6 +3528,8 @@ function OnME_Update(scriptCmdData) {
                     out_obj.container_codec 		= track['CodecID']							|| '';
                     out_obj.container_enc_app		= track['Encoded_Application']				|| '';	// video does not have app, only container
                     out_obj.container_enc_lib		= track['Encoded_Library']					|| '';
+                    out_obj.container_date_encoded	= track['Encoded_Date']				    	|| '';
+                    out_obj.container_date_tagged	= track['Tagged_Date']				    	|| '';
                     out_obj.file_size 				= parseInt(track['FileSize'])				|| 0;
                     out_obj.duration				= parseFloat(track['Duration'])				|| 0;
                     out_obj.overall_bitrate			= parseInt(track['OverallBitRate'])			|| 0;
@@ -4419,7 +4500,8 @@ function DumpCache(prefix, mode) {
 function ReadMetadataADS(oItem) {
     var msn = config.get('MetaStreamName');
     if (!msn) { logger.error('ReadMetadataADS -- Cannot continue without a stream name: ' + msn); return false; }
-    if (!oItem.modify) { logger.error('ReadMetadataADS -- Expected FSUtil Item, got: ' + oItem + ', type: ' + typeof oItem); return false; }
+    // if (!oItem.modify) { logger.error('ReadMetadataADS -- Expected FSUtil Item, got: ' + oItem + ', type: ' + typeof oItem); return false; }
+    if ((typeof oItem !== 'object' || typeof oItem.realpath === 'undefined' || typeof oItem.modify === 'undefined')) { logger.error('ReadMetadataADS -- Expected FSUtil Item, got: ' + oItem + ', type: ' + typeof oItem); return false; }
     var rp = ''+oItem.realpath; // realpath returns a DOpus Path object and it does not work well with Map as an object, we need a simple string
 
     InitCacheIfNecessary();
