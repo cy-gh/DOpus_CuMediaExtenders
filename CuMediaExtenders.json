@@ -8,5 +8,9 @@
         "MExt_VARCombined": "AspectRatio",
         "MExt_AudioChannels": "Channels",
         "MExt_AudioCompressionMode": "ACompMode"
+    },
+    "colExtra": {
+        "com_apple_quicktime_model": "Camera Make",
+        "com_apple_quicktime_software": "Camera Software"
     }
 }
