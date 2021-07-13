@@ -2564,11 +2564,7 @@ function _initializeColumns(initData) {
             DOpus.output('adding custom column: ' + ecitem);
             addColumn(initData,
                 'OnMExt_MultiColRead',
-<<<<<<< HEAD
                 'MExt_' + ecitem,
-=======
-                ecitem,
->>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
                 extConfig.colExtra[ecitem],
                 'left', true, true, true);
             colExtraMap.set(ecitem, extConfig.colExtra[ecitem]);
