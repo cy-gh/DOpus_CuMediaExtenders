@@ -2564,7 +2564,11 @@ function _initializeColumns(initData) {
             DOpus.output('adding custom column: ' + ecitem);
             addColumn(initData,
                 'OnMExt_MultiColRead',
+<<<<<<< HEAD
                 'MExt_' + ecitem,
+=======
+                ecitem,
+>>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
                 extConfig.colExtra[ecitem],
                 'left', true, true, true);
             colExtraMap.set(ecitem, extConfig.colExtra[ecitem]);
@@ -3386,16 +3390,26 @@ function OnMExt_MultiColRead(scriptColData) {
                 break;
 
             default:
+<<<<<<< HEAD
                 // check if there are any user-defined fields
+=======
+>>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
                 if(colExtraMap.exists(key)){
                     if (!item_props.extra[key]) { scriptColData.columns(key).sort = 0; break; }
                     outstr = item_props.extra[key] || '';
                     scriptColData.columns(key).group = colExtraMap.get(key) + ': ' + outstr;
                     scriptColData.columns(key).value = outstr;
                 } else {
+<<<<<<< HEAD
                     // nothing, default to empty string
                     outstr = '';
                 }
+=======
+                    DOpus.output('nothing found');
+                    outstr = '';
+                }
+                // nothing, default to empty string
+>>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
         } // switch
 
     } // for enum
