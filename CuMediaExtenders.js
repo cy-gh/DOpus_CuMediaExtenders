@@ -13,12 +13,12 @@
     var Global = { };
     Global.SCRIPT_NAME        = 'CuMediaExtenders'; // WARNING: if you change this after initial use you have to reconfigure your columns, infotips, rename scripts...
     Global.SCRIPT_NAME_SHORT  = 'CME';
-    Global.SCRIPT_VERSION     = 'v0.93';
+    Global.SCRIPT_VERSION     = 'v0.94';
     Global.SCRIPT_COPYRIGHT   = '© 2021 cuneytyilmaz.com';
     Global.SCRIPT_URL         = 'https://github.com/cy-gh/DOpus_CuMediaExtenders/';
     Global.SCRIPT_DESC        = 'Extended fields for multimedia files (movie & audio) with the help of MediaInfo & NTFS ADS';
-    Global.SCRIPT_MIN_VERSION = '12.23';
-    Global.SCRIPT_DATE        = '20210713';
+    Global.SCRIPT_MIN_VERSION = '12.24';
+    Global.SCRIPT_DATE        = '20210719';
     Global.SCRIPT_GROUP       = 'cuneytyilmaz.com';
     Global.SCRIPT_PREFIX      = 'MExt';				// prefix for field checks, log outputs, progress windows, etc. - do not touch
     Global.SCRIPT_LICENSE     = 'Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)';
@@ -35,8 +35,8 @@
 
 
 String.prototype.trim = function () {
-    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-}
+    return this.replace(/^\s+|\s+$/g, '');
+};
 String.prototype.normalizeLeadingWhiteSpace = function () {
     return this
         .replace(/^\t\t\t|^ {12}/mg, '§§')
@@ -649,28 +649,21 @@ var HEREDOCS = {
     delete HEREDOCS['Version History']; // leave the one above as is, but this one is too big and probably uninteresting to most users
     delete HEREDOCS['DOpus Settings']; // leave the one above as is, but this one is too big and probably uninteresting to most users
     delete HEREDOCS['Future']; // leave the one above as is, but this one is too big and probably uninteresting to most users
-    var out = '';
     for (var hd in HEREDOCS) {
         HEREDOCS[hd] = hd +
 			"\r\n" +
-			HEREDOCS[hd]
-			    .replace(/^(\s+?)\t(\S)/mg, '$1    $2')
-				.replace(/^(\s+?)\t(\s*\S)/mg, '$1    $2')
-			    .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
-			    .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
-			    .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
+			HEREDOCS[hd].replace(/^(\s+?)\t(\S)/mg, '$1    $2')
+                .replace(/^(\s+?)\t(\s*\S)/mg, '$1    $2')
+                .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
+                .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
+                .replace(/^(\s+?)\t(\s+\S)/mg, '$1    $2')
 			//.replace(/^(\s+?)\t\b/mg, '$1    ')
 			//.replace(/^\t\b/mg, '    ')
 			// .replace(/^\t/mg, '    ')
 			//.replace(/^    /mg, '')
-			    .slice(14,-3)
+                .slice(14,-3)
 			+ "\r\n";
-        // DOpus.Output(hd);
-        //out += HEREDOCS[hd];
     }
-    // DOpus.Output(out);
-    // DOpus.Output("\n" + HEREDOCS['WHAT IS THIS']);
-    // DOpus.Output(JSON.stringify(HEREDOCS, null, 4));
 }
 
 
@@ -748,7 +741,7 @@ var logger = (function() {
             }
             return keys;
         }
-    }
+    };
 }());
 
 
@@ -775,7 +768,7 @@ var config = (function () {
         NONE  : 'NONE',
         ERROR : 'ERROR',
         DIALOG: 'DIALOG'
-    }
+    };
     var _count        = 0;
     var _vals         = {};
     var _types        = {};
@@ -821,7 +814,7 @@ var config = (function () {
         dlg.message = msg;
         dlg.title	= Global.SCRIPT_NAME + ' - Error' ;
         dlg.buttons	= 'OK';
-        dlg.Show();
+        var _dummy = dlg.show;
         dlg = null;
         return false;
     }
@@ -841,8 +834,13 @@ var config = (function () {
                 return typeof val === 'object' && val.length >= 0;
             case SUPPORTED_TYPES.POJO:
                 // any object without functions
-                if (typeof val !== 'object') {
+                if (typeof val !== 'object' && typeof val !== 'string') {
                     return false;
+                }
+                if (typeof val === 'string') {
+                    try {
+                        val = JSON.parse(val);
+                    } catch (e) { return false; }
                 }
                 for (k in val) {
                     if (typeof val[k] === 'function') { return false; }
@@ -854,7 +852,7 @@ var config = (function () {
                 if (typeof val !== 'string' && typeof val !== 'object') {
                     return false;
                 }
-                try { eval('new RegExp(' + val + ');'); return true; } catch(e) { return false }
+                try { eval('new RegExp(' + val + ');'); return true; } catch(e) { return false; }
             case SUPPORTED_TYPES.JSON:
                 try { JSON.parse(val); return true; } catch(e) { return false; }
             case SUPPORTED_TYPES.FUNCTION:
@@ -867,7 +865,7 @@ var config = (function () {
         if (_vals.hasOwnProperty(key)) {
             return showError(key + ' already exists');
         }
-        if (!!!bypassValidation && !isValid(val, type)) {
+        if (!bypassValidation && !isValid(val, type)) {
             return showError('type ' + type + ' does not accept given value ' + val);
         }
         _count++;
@@ -1416,10 +1414,10 @@ var config = (function () {
         //
         // the comparison is always <= (less or equal), i.e. real duration <= config values below
         // if reported duration is 0 but the file definitely has audio e.g raw AAC/DTS/Atmos.., you can recognize this as well
-        // \u2260 is the Unicode 'not equal' sign
+        // \u2260 is the Unicode 'not equal' sign (≠)
         // if the file has no audio track at all, this is grouped automatically under 'No Audio', no need to define it here
         // Note that some values like 'Over 1h' depend on preceeding key's value
-        "0":        " ≠00:00",
+        "0":        " 00:00",
         "60":       "< 01:00",
         "120":      "01:00-02:00",
         "180":      "02:00-03:00",
@@ -1688,7 +1686,8 @@ var config = (function () {
 	 *
 	 * ADJUST AS YOU SEE FIT
 	 */
-    config.addBoolean('resolution_append_vertical', true, 'RESOLUTION_APPEND_VERTICAL');
+    // config.addBoolean('resolution_append_vertical', true, 'RESOLUTION_APPEND_VERTICAL');
+    config.addString('resolution_append_vertical', ' (Vertical)', 'RESOLUTION_APPEND_VERTICAL');
 
     /**
 	 * Audio formats which do not store a VBR/CBR/ABR information separately but are VBR by definition
@@ -1724,8 +1723,8 @@ var config = (function () {
         "0": " ",
 
         "X": "> 0', // for formats like MusePack & raw DTS which report an audio track but not the channel count, sorted between 0 & 1",
-        "X": "≠ 0', // for formats like MusePack & raw DTS which report an audio track but not the channel count, sorted between 0 & 1",
-        "X": "≠0",
+        "X": "\u2260 0', // for formats like MusePack & raw DTS which report an audio track but not the channel count, sorted between 0 & 1",
+        "X": "\u22600",
 
         "1": "1.0",
         "2": "2.0",
@@ -1810,18 +1809,32 @@ var config = (function () {
         // to user-customizable fields. In order to find out how the fields
         // are called, you have to check out one of the helper fields and
         // look for the field "extra" with subitems under it.
-        // this feature is supported only for Container.Extra, in order to
-        // keep things simple, because there can be multiple audio/subtitle tracks,
-        // or even multiple video tracks, but Extra blocks for those are rarely filled.
+        //
+        // this feature is supported for all 3 available Extra fields,
+        // but only for the 1st (audio) track, i.e. only 1st audio track will be considered.
+        //  - Container: use "Extra" as source
+        //  - Video: use "Video_Extra" as source
+        //  - Audio: use "Audio_Extra" as source
+        //
+        // last but not least, user columns can be also toggled,
+        // simply add 'MExt_' (without quotes) in front and add one of the toggle lists
+        // e.g. "MExt_com_apple_quicktime_software"
         "colExtra": {
             "com_apple_quicktime_model": "Camera Make",
             "com_apple_quicktime_software": "Camera Software"
             // do not put , in the last line
+        },
+        "colExtraVideo": {
+            "CodecConfigurationBox": "Codec Config Box"
+            // do not put , in the last line
+        },
+        "colExtraAudio": {
+            "Source_Delay": "Source Delay"
+            // do not put , in the last line
         }
         // do not put , in the last line
     }
-    }.toString().slice(17, -3)
-    .substituteVars();
+    }.toString().slice(17, -3).substituteVars();
     JSON.stringify(JSON.parse(config_file_contents)); // test parseability on script load, do not remove
     config.addString('ref_config_file', config_file_contents.normalizeLeadingWhiteSpace(), 'REF_CONFIG_FILE');
 
@@ -1935,7 +1948,7 @@ function addColumn(initData, method, name, label, justify, autogroup, autorefres
 }
 
 // internal method called by OnInit()
-function _readExternalConfig(initData) {
+function _readExternalConfig() {
     // var cfgpath = config.get('config_file_dir_resolved');
     // var cfgfile = config.get('config_file_name');
     var cfgpath = config_file_dir_resolved;
@@ -2248,6 +2261,14 @@ function _initializeCommands(initData) {
         'Validate current configuration');
 
     addCommand(initData,
+        'ME_GitHubPage',
+        'OnME_GitHubPage',
+        '',
+        'GitHubPage',
+        'MExt GitHub Page && Docs',
+        'Script page with extensive documentation');
+
+    addCommand(initData,
         'ME_TestMethod1',
         'OnME_TestMethod1',
         '',
@@ -2557,19 +2578,52 @@ function _initializeColumns(initData) {
     //   "com_apple_quicktime_model": "Camera Make"
     // }
     var extConfig = config.get('ext_config_pojo');
-    if (typeof extConfig !== 'undefined' && typeof extConfig.colExtra === 'object') {
-        /** @type {DOpusMap} */
-        var colExtraMap = DOpus.create().map();
-        for(var ecitem in extConfig.colExtra) {
-            DOpus.output('adding custom column: ' + ecitem);
-            addColumn(initData,
-                'OnMExt_MultiColRead',
-                'MExt_' + ecitem,
-                extConfig.colExtra[ecitem],
-                'left', true, true, true);
-            colExtraMap.set(ecitem, extConfig.colExtra[ecitem]);
+    if (typeof extConfig !== 'undefined' && ( typeof extConfig.colExtra === 'object' || typeof extConfig.colExtraVideo === 'object' || typeof extConfig.colExtraAudio === 'object' )) {
+        if (typeof extConfig.colExtra === 'object') {
+            /** @type {DOpusMap} */
+            var colExtraMap = DOpus.create().map();
+            for(var ecitemContainer in extConfig.colExtra) {
+                DOpus.output('adding Container-Extra column: ' + ecitemContainer + ' -->  ' + extConfig.colExtra[ecitemContainer]);
+                addColumn(initData,
+                    'OnMExt_MultiColRead',
+                    'MExt_' + ecitemContainer,
+                    // ecitem,
+                    extConfig.colExtra[ecitemContainer],
+                    'left', true, true, true);
+                colExtraMap.set(ecitemContainer, extConfig.colExtra[ecitemContainer]);
+            }
+        }
+        if (typeof extConfig.colExtraVideo === 'object') {
+            /** @type {DOpusMap} */
+            var colExtraVideoMap = DOpus.create().map();
+            for(var ecitemVideo in extConfig.colExtraVideo) {
+                DOpus.output('adding Video-Extra column: ' + ecitemVideo + ' -->  ' + extConfig.colExtraVideo[ecitemVideo]);
+                addColumn(initData,
+                    'OnMExt_MultiColRead',
+                    'MExt_' + ecitemVideo,
+                    // ecitem,
+                    extConfig.colExtraVideo[ecitemVideo],
+                    'left', true, true, true);
+                colExtraVideoMap.set(ecitemVideo, extConfig.colExtraVideo[ecitemVideo]);
+            }
+        }
+        if (typeof extConfig.colExtraAudio === 'object') {
+            /** @type {DOpusMap} */
+            var colExtraAudioMap = DOpus.create().map();
+            for(var ecitemAudio in extConfig.colExtraAudio) {
+                DOpus.output('adding Audio-Extra column: ' + ecitemAudio + ' -->  ' + extConfig.colExtraAudio[ecitemAudio]);
+                addColumn(initData,
+                    'OnMExt_MultiColRead',
+                    'MExt_' + ecitemAudio,
+                    // ecitem,
+                    extConfig.colExtraAudio[ecitemAudio],
+                    'left', true, true, true);
+                colExtraAudioMap.set(ecitemAudio, extConfig.colExtraAudio[ecitemAudio]);
+            }
         }
         initData.vars.set('colExtraMap', colExtraMap);
+        initData.vars.set('colExtraVideoMap', colExtraVideoMap);
+        initData.vars.set('colExtraAudioMap', colExtraAudioMap);
     }
 }
 
@@ -2709,7 +2763,7 @@ function OnScriptConfigChange(cfgChangeData) {
             dlg.message = err;
             dlg.title	= Global.SCRIPT_NAME + ' - Error' ;
             dlg.buttons	= 'OK';
-            ret = dlg.show;
+            dlg.show();
             continue;
         }
     }
@@ -2795,7 +2849,9 @@ function OnMExt_MultiColRead(scriptColData) {
     }
 
     var _vcodec, _acodec, _resolution;
-    var colExtraMap = Script.vars.get('colExtraMap');
+    var colExtraMap      = Script.vars.get('colExtraMap'),
+        colExtraVideoMap = Script.vars.get('colExtraVideoMap'),
+        colExtraAudioMap = Script.vars.get('colExtraAudioMap');
 
     // iterate over requested columns
     for (var e = new Enumerator(scriptColData.columns); !e.atEnd(); e.moveNext()) {
@@ -3032,13 +3088,13 @@ function OnMExt_MultiColRead(scriptColData) {
 
                 if (key === 'MExt_AudioDuration' && !item_props.audio_count) {
                     logger.normal('Col: ' + key + "\t" + selected_item.name + ' -- FALLBACK A1 - No audio');
-                    scriptColData.columns(key).value = item_props.audio_bitrate ? '≠00:00' : '';
+                    scriptColData.columns(key).value = item_props.audio_bitrate ? '\u226000:00' : '';
                     scriptColData.columns(key).sort  = scriptColData.columns(key).value || '00:00';
                     scriptColData.columns(key).group = grpPrefix + 'Duration: No Audio';
                     break;
                 } else if (key === 'MExt_VideoDuration' && !item_props.video_count) {
                     logger.normal('Col: ' + key + "\t" + selected_item.name + ' -- FALLBACK V1 - No video');
-                    scriptColData.columns(key).value = item_props.video_bitrate ? '≠00:00' : '';
+                    scriptColData.columns(key).value = item_props.video_bitrate ? '\u226000:00' : '';
                     scriptColData.columns(key).sort  = '00:00';
                     scriptColData.columns(key).group = grpPrefix + 'Duration: No Video';
                     break;
@@ -3078,7 +3134,7 @@ function OnMExt_MultiColRead(scriptColData) {
                         }
                     } else if (!td && !vd && !ad) {
                     // none of 3 exists - but if we are this far, we have at least 1 video or audio stream
-                        outstr = '≠00:00';
+                        outstr = '\u226000:00';
                     } else {
                         logger.info(sprintf("Only some exist -- td: %s, vd: %s, ad: %s", td, vd, ad));
                         // check for tolerance
@@ -3123,15 +3179,15 @@ function OnMExt_MultiColRead(scriptColData) {
                 switch(key) {
                     case 'MExt_TotalDuration':
                         scriptColData.columns(key).sort  = outstr || (item_props.overall_bitrate || item_props.duration ? '00:01' : '00:00');
-                        scriptColData.columns(key).value = outstr || (item_props.overall_bitrate || item_props.duration ? '≠00:00' : '');
+                        scriptColData.columns(key).value = outstr || (item_props.overall_bitrate || item_props.duration ? '\u226000:00' : '');
                         break;
                     case 'MExt_VideoDuration':
                         scriptColData.columns(key).sort  = outstr || (item_props.video_bitrate || item_props.video_count ? '00:01' : '00:00');
-                        scriptColData.columns(key).value = outstr || (item_props.video_bitrate || item_props.video_count ? '≠00:00' : '');
+                        scriptColData.columns(key).value = outstr || (item_props.video_bitrate || item_props.video_count ? '\u226000:00' : '');
                         break;
                     case 'MExt_AudioDuration':
                         scriptColData.columns(key).sort  = outstr || (item_props.audio_bitrate || item_props.audio_count ? '00:01' : '00:00');
-                        scriptColData.columns(key).value = outstr || (item_props.audio_bitrate || item_props.audio_count ? '≠00:00' : '');
+                        scriptColData.columns(key).value = outstr || (item_props.audio_bitrate || item_props.audio_count ? '\u226000:00' : '');
                         break;
                     case 'MExt_CombinedDuration':
                         scriptColData.columns(key).sort  = outstr;
@@ -3230,7 +3286,7 @@ function OnMExt_MultiColRead(scriptColData) {
                     }
                 }
                 if (item_props.video_height >= item_props.video_width && config.get('resolution_append_vertical')) {
-                    outstr += ' (Vertical)';
+                    outstr += config.get('resolution_append_vertical');
                 }
                 scriptColData.columns(key).group = 'Resolution: ' + outstr;
                 scriptColData.columns(key).value = outstr;
@@ -3386,26 +3442,27 @@ function OnMExt_MultiColRead(scriptColData) {
                 break;
 
             default:
-<<<<<<< HEAD
                 // check if there are any user-defined fields
-=======
->>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
-                if(colExtraMap.exists(key)){
-                    if (!item_props.extra[key]) { scriptColData.columns(key).sort = 0; break; }
-                    outstr = item_props.extra[key] || '';
-                    scriptColData.columns(key).group = colExtraMap.get(key) + ': ' + outstr;
+                var keyUser = key.replace('MExt_', '');
+                if(colExtraMap.exists(keyUser)){
+                    if (!item_props.extra || !item_props.extra[keyUser]) { scriptColData.columns(key).sort = 0; break; }
+                    outstr = item_props.extra[keyUser] || '';
+                    scriptColData.columns(key).group = colExtraMap.get(keyUser) + ': ' + outstr;
+                    scriptColData.columns(key).value = outstr;
+                } else if(colExtraVideoMap.exists(keyUser)){
+                    if (!item_props.video_extra || !item_props.video_extra[keyUser]) { scriptColData.columns(key).sort = 0; break; }
+                    outstr = item_props.video_extra[keyUser] || '';
+                    scriptColData.columns(key).group = colExtraVideoMap.get(keyUser) + ': ' + outstr;
+                    scriptColData.columns(key).value = outstr;
+                } else if(colExtraAudioMap.exists(keyUser)){
+                    if (!item_props.audio_extra || !item_props.audio_extra[keyUser]) { scriptColData.columns(key).sort = 0; break; }
+                    outstr = item_props.audio_extra[keyUser] || '';
+                    scriptColData.columns(key).group = colExtraAudioMap.get(keyUser) + ': ' + outstr;
                     scriptColData.columns(key).value = outstr;
                 } else {
-<<<<<<< HEAD
                     // nothing, default to empty string
                     outstr = '';
                 }
-=======
-                    DOpus.output('nothing found');
-                    outstr = '';
-                }
-                // nothing, default to empty string
->>>>>>> b8370f1fc2d47fc98439d223376699b1629d4f27
         } // switch
 
     } // for enum
@@ -3673,8 +3730,8 @@ function OnME_Update(scriptCmdData) {
         // not sure if it really misses files though
         util.cmdGlobal.RunCommand('Go Refresh');
         util.cmdGlobal.ClearFiles();
-        for (var e = new Enumerator(orig_selected_items); !e.atEnd(); e.moveNext()) {
-            util.cmdGlobal.AddFile(e.item());
+        for (var e2 = new Enumerator(orig_selected_items); !e2.atEnd(); e2.moveNext()) {
+            util.cmdGlobal.AddFile(e2.item());
         }
         util.cmdGlobal.RunCommand('Select FROMSCRIPT');
     }
@@ -3737,8 +3794,8 @@ function OnME_Delete(scriptCmdData) {
         // not sure if it really misses files though
         util.cmdGlobal.RunCommand('Go Refresh');
         util.cmdGlobal.ClearFiles();
-        for (var e = new Enumerator(orig_selected_items); !e.atEnd(); e.moveNext()) {
-            util.cmdGlobal.AddFile(e.item());
+        for (var e2 = new Enumerator(orig_selected_items); !e2.atEnd(); e2.moveNext()) {
+            util.cmdGlobal.AddFile(e2.item());
         }
         util.cmdGlobal.RunCommand('Select FROMSCRIPT');
     }
@@ -3804,7 +3861,17 @@ function OnME_EstimateBitrates(scriptCmdData) {
     var target_bitsperpixel_values = [
         0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 50
     ];
-    var out_obj = {};
+
+    DOpus.clearOutput();
+    DOpus.output(
+        ' \n' +
+        '<b>Encode your video at the following bitrate (video track) for the targeted bits/pixel ratio<b>\n' +
+        '<b>------------------------------------------------------------------------------------------<b>\n' +
+        'Read the docs before; depends on codec & video and it\'s not as simple as 3*8=24 b/p\n' +
+        'Used target bit/pixel values: ' + target_bitsperpixel_values.join(', ') + '\n '
+    );
+
+    // var out_obj = {};
     for (var e = new Enumerator(scriptCmdData.func.sourcetab.selected); !e.atEnd(); e.moveNext()) {
         var selected_item = e.item();
         if (selected_item.is_dir || selected_item.is_reparse || selected_item.is_junction || selected_item.is_symlink ) {
@@ -3812,14 +3879,24 @@ function OnME_EstimateBitrates(scriptCmdData) {
             continue;
         }
         var item_props = ReadMetadataADS(selected_item);
-        out_obj[selected_item.realpath] = [];
+        if(!item_props) {
+            logger.error('Skipping -- has no ADS: ' + selected_item.name);
+            continue;
+        }
+        // out_obj[selected_item.realpath] = [];
+        var fileResults = [];
         for (var i = 0; i < target_bitsperpixel_values.length; i++) {
             var current_target_value = target_bitsperpixel_values[i];
-            var estimated_target_bitrate = Math.round(current_target_value * item_props.video_width * item_props.video_height / (1024)) + ' kbps';
-            out_obj[selected_item.realpath].push( { 'target_bitsperpixel': current_target_value, 'estimated kbps': estimated_target_bitrate } );
+            var estimated_target_bitrate = Math.round(current_target_value * item_props.video_width * item_props.video_height / (1024));
+            // out_obj[selected_item.realpath].push( { 'target_bitsperpixel': current_target_value, 'estimated kbps': estimated_target_bitrate } );
+            fileResults.push( sprintf('%3.3p bits/pixel => %5d kbps', current_target_value, estimated_target_bitrate, estimated_target_bitrate));
         }
+        DOpus.Output(sprintf('File: %s (%d x %d) ==> %s', selected_item.name, item_props.video_width, item_props.video_height, JSON.stringify(fileResults, null, 4)));
     }
-    DOpus.Output(JSON.stringify(out_obj, null, 4));
+    util.cmdGlobal.RunCommand('Set UTILITY=OtherLog,On');
+    // if (out_obj) {
+    //     DOpus.Output(JSON.stringify(out_obj, null, 4));
+    // }
 }
 
 // TOGGLE ESSENTIAL COLUMNS
@@ -3863,7 +3940,7 @@ function _toggleColumnGroup(groupName, columnsArray, columnAfter) {
             refresh = true;
         }
         logger.info('Toggling col: ' + item);
-        cmd = 'Set COLUMNSTOGGLE=' + item + '(!' + (i+1) + '+' +  col_after + ',*)'; // * is for auto-size
+        var cmd = 'Set COLUMNSTOGGLE=' + item + '(!' + (i+1) + '+' +  col_after + ',*)'; // * is for auto-size
         logger.verbose('_toggleColumnGroup -- (' + groupName + '):   ' + cmd);
         util.cmdGlobal.addLine(cmd);
     }
@@ -3891,7 +3968,7 @@ function validateConfigAndShowResult(debug, showValues, dialog, skipIfValid, val
         dlgConfirm.message  = Global.SCRIPT_NAME + ' configuration is ' + (isValid ? 'valid' : 'invalid');
         dlgConfirm.title	= Global.SCRIPT_NAME + ' - Configuration Validation' ;
         dlgConfirm.buttons	= 'OK';
-        ret = dlgConfirm.show;
+        var _dummy = dlgConfirm.show;
     }
     return isValid;
 }
@@ -3933,7 +4010,7 @@ function validateConfig(debug, showValues, validateDefaultValues) {
                         t,
                         b,
                         (iv ? iv : iv + ', expected: ' + t + ', found: ' + typeof v),
-                        (!!showValues ? v : alternativeValue)
+                        (showValues ? v : alternativeValue)
                     )
                 );
             }
@@ -3963,7 +4040,7 @@ function validateConfig(debug, showValues, validateDefaultValues) {
                     t,
                     b,
                     (iv ? iv : iv + ', expected: ' + t + ', found: ' + typeof v + ' (boolean false is standard for invalid values)'),
-                    (!!showValues ? v : alternativeValue)
+                    (showValues ? v : alternativeValue)
                 )
             );
         }
@@ -3978,6 +4055,10 @@ function validateConfig(debug, showValues, validateDefaultValues) {
     }
 
     return configIsValid;
+}
+
+function OnME_GitHubPage() {
+    util.shellGlobal.Run("%comspec% /c start " + Global.SCRIPT_URL, 0, true); // 0: hidden, true: wait
 }
 
 // DEVELOPER HELPER METHOD
@@ -4018,7 +4099,7 @@ function OnME_TestMethod1(scriptCmdData) {
     res = config.addArray('g', { 'a': 1 });								DOpus.Output('\tresult: ' + res); // value not matching given type
     res = config.addPOJO('h', {"a":1,fn:function(){}});					DOpus.Output('\tresult: ' + res); // value not matching given type
     res = config.addObject('i', '{ "a": 1');							DOpus.Output('\tresult: ' + res); // value not matching given type
-    res = config.addString('j', function(){var x= 1});					DOpus.Output('\tresult: ' + res); // value not matching given type
+    res = config.addString('j', function(){var x= 1; });					DOpus.Output('\tresult: ' + res); // value not matching given type
     config.setErrorMode(oldErrorMode);
     DOpus.Output('OnME_TestMethod1 -- Adding invalid values - finished');
 
@@ -4159,7 +4240,7 @@ function GetMediaInfoForAllSelectedFiles(scriptCmdData) {
             continue;
         }
         logger.normal('Name: ' + selected_item.name);
-        current_json = JSON.parse(GetMediaInfoFor(selected_item));
+        var current_json = JSON.parse(GetMediaInfoFor(selected_item));
         out_obj[selected_item.realpath] = current_json;
     }
     return JSON.stringify(out_obj, null, 4);
@@ -4237,14 +4318,19 @@ function getUniqueIDForString(sString) {
     return DOpus.fsUtil().hash(blob, 'md5');
 }
 
+function getSafeLongPathName(strPath) {
+    return (''+strPath).length > 240
+        ? '\\\\?\\' + strPath
+        : strPath;
+}
 
 // internal method
 // reads raw MediaInfo output for a single file, always reads from disk
 function GetMediaInfoFor(oItem) {
 
-	function removeVolVar(sVar) {
-		util.shellGlobal.Environment("Volatile").remove(sVar);
-	}
+    function removeVolVar(sVar) {
+        util.shellGlobal.Environment("Volatile").remove(sVar);
+    }
     var mediainfo_output;
     var exit_code;
     var cmd;
@@ -4268,7 +4354,7 @@ function GetMediaInfoFor(oItem) {
             sPrefix,
             iChunkSize,
             config.get('mediainfo_path'),
-            oItem.realpath
+            getSafeLongPathName(oItem.realpath)
         );
         logger.normal('Running command: ' + cmd);
         exit_code = util.shellGlobal.Run(cmd, 0, true); // 0: hidden, true: wait
@@ -4298,7 +4384,7 @@ function GetMediaInfoFor(oItem) {
             // 	sVarName = sPrefix + 'ERR' + i;
             // 	sStdErr += '' + DOpus.fsUtil().resolve('%' + sVarName + '%');
             // 	// delete the var
-			// removeVolVar(sVarName);
+            // removeVolVar(sVarName);
             // }
             // logger.error(oItem.name + ', ' + sStdErr);
             return;
@@ -4321,8 +4407,8 @@ function GetMediaInfoFor(oItem) {
 
         logger.normal('Running in TEMPORARY FILES MODE');
 
-        var json_filepath 	= config.get('temp_files_dir') + '\\' + oItem.name_stem + '.json';
-        cmd 			= '"' + config.get('mediainfo_path') + '" --Output=JSON --LogFile="' + json_filepath + '" "' + oItem.realpath + '"';
+        var json_filepath 	= getSafeLongPathName(config.get('temp_files_dir') + '\\' + oItem.name_stem + '.json');
+        cmd 			= '"' + config.get('mediainfo_path') + '" --Output=JSON --LogFile="' + json_filepath + '" "' + getSafeLongPathName(oItem.realpath) + '"';
         logger.verbose('Executing: ' + cmd);
         /*
 			Run  can return %ERRORLEVEL%     but does NOT support async output, does not call CMD to execute the action
@@ -4488,7 +4574,7 @@ function InitCacheIfNecessary() {
 // debugging method, not used
 function DumpCache(prefix, mode) {
     logger.normal((prefix || '') + ' -- Cache dump @' + new Date().getTime().toString());
-	var e, item;
+    var e, item;
     switch (mode) {
         case 1: // names only
             for (e = new Enumerator(util.sv.Get('cache')), item; !e.atEnd(); e.moveNext(), item = e.item()) {

@@ -123,7 +123,7 @@
 			<instruction>ME_ConfigValidate DEBUG </instruction>
 		</function>
 	</button>
-	<button backcol="none" display="both" icon_size="large" label_pos="right" textcol="none">
+	<button backcol="none" display="both" icon_size="large" label_pos="right" separate="yes" textcol="none">
 		<label>MExt Estimate Bitrate</label>
 		<tip>Calculate estimated bitrates for various target Bitrate/Pixel values</tip>
 		<icon1>#MExt:Calculate</icon1>
@@ -133,6 +133,14 @@
 			<instruction>@disablenosel </instruction>
 			<instruction>@nodeselect </instruction>
 			<instruction>@runonce </instruction>
+		</function>
+	</button>
+	<button backcol="none" display="both" icon_size="large" label_pos="right" textcol="none">
+		<label>MExt GitHub Page &amp;&amp; Docs</label>
+		<tip>Script page with extensive documentation</tip>
+		<icon1>#GitHubPage</icon1>
+		<function type="normal">
+			<instruction>ME_GitHubPage</instruction>
 		</function>
 	</button>
 </button>
