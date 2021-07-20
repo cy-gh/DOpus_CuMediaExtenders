@@ -1902,13 +1902,15 @@ function OnInit(initData) {
     initData.log_prefix		= Global.SCRIPT_PREFIX;
     initData.default_enable = true;
 
-    DOpus.ClearOutput();
+    DOpus.clearOutput();
+    DOpus.output('initialization started');
 
     _readExternalConfig(initData);
     _initalizeConfigVars(initData);
     _initializeCommands(initData);
     _initializeColumns(initData);
 
+    DOpus.output('initialization finished');
     return false;
 }
 
@@ -1953,28 +1955,24 @@ function _readExternalConfig() {
     // var cfgfile = config.get('config_file_name');
     var cfgpath = config_file_dir_resolved;
     var cfgfile = config_file_name;
-    logger.force('Checking external config file under: ' + cfgpath + cfgfile);
+    DOpus.output('Checking external config file under: ' + cfgpath + cfgfile);
     if (!DOpus.FSUtil.Exists( cfgpath + cfgfile)) {
-        logger.force('...not found, skipping');
+        DOpus.output('...not found, skipping');
         return;
     }
-    logger.force('...using external config file');
+    DOpus.output('...using external config file');
     var extcfgContents = ReadFile(cfgpath + cfgfile);
-    // logger.force('extcfgContents:\n' + extcfgContents);
+    if (!extcfgContents) {
+        DOpus.output('...external config file cannot be read');
+    }
 
     // test parseability
-    var cem = config.getErrorMode();
-    config.setErrorMode(config.modes.DIALOG);
     try {
         config.set('ext_config_pojo', JSON.parse(extcfgContents));
-        logger.force('...external config is valid JSON');
-        // oExtConfigPOJO = JSON.parse(extcfgContents);
+        DOpus.output('...external config is valid JSON');
     } catch(e) {
         var err = 'External config file found but is not valid JSON, ignoring\n\nerror: ' + e.toString();
-        config.showError(err);
-        logger.force(err);
-        config.setErrorMode(cem);
-        return;
+        DOpus.output(err, true);
     }
 }
 
@@ -2849,9 +2847,9 @@ function OnMExt_MultiColRead(scriptColData) {
     }
 
     var _vcodec, _acodec, _resolution;
-    var colExtraMap      = Script.vars.get('colExtraMap'),
-        colExtraVideoMap = Script.vars.get('colExtraVideoMap'),
-        colExtraAudioMap = Script.vars.get('colExtraAudioMap');
+    var colExtraMap      = Script.vars.exists ('colExtraMap')      && Script.vars.get('colExtraMap')      || DOpus.create().map(),
+        colExtraVideoMap = Script.vars.exists ('colExtraVideoMap') && Script.vars.get('colExtraVideoMap') || DOpus.create().map(),
+        colExtraAudioMap = Script.vars.exists ('colExtraAudioMap') && Script.vars.get('colExtraAudioMap') || DOpus.create().map();
 
     // iterate over requested columns
     for (var e = new Enumerator(scriptColData.columns); !e.atEnd(); e.moveNext()) {
