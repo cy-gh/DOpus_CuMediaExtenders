@@ -2626,6 +2626,13 @@ function _initializeColumns(initData) {
 }
 
 
+function OnGetHelpContent(helpData) {
+    // DOpus.output('OnGetHelpContent started');
+    // var s = Script.loadHelpFile('verySimplePage.html');
+    // DOpus.output('s: ' + s.slice(0, 2000));
+    // helpData.addHelpPage('verySimplePage.html', 'Configuration', s);
+}
+
 
 // called by DOpus
 // eslint-disable-next-line no-unused-vars

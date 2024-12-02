@@ -2,7 +2,7 @@
 *del /qfkz CuMediaExtenders.osp > NUL:
 *del /qfkz CuMediaExtenders.rar > NUL:
 
-winrar a -ep1 -t CuMediaExtenders.zip CuMediaExtenders*.js* Icons
+winrar a -ep1 -t CuMediaExtenders.zip CuMediaExtenders*.js* icons help
 *ren CuMediaExtenders.zip CuMediaExtenders.osp
 
 winrar a -ep1 -t CuMediaExtenders.rar CuMediaExtenders.osp CuMediaExtenders.dcf CuMediaExtenders.psd StatusMExt.icl QuickStart.md

@@ -1,0 +1,567 @@
+<!doctype html>
+<html>
+<head>
+<meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
+<title>configOptions</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:"Lucida Console",Consolas,"Courier",monospace; --title-bar-height:20px; }
+.mac-os-11 { --title-bar-height:28px; }
+html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { margin: 0px; padding: 0px; height: auto; bottom: 0px; top: 0px; left: 0px; right: 0px; font-size: 1rem; line-height: 1.42857; overflow-x: hidden; background: inherit; tab-size: 4; }
+iframe { margin: auto; }
+a.url { word-break: break-all; }
+a:active, a:hover { outline: 0px; }
+.in-text-selection, ::selection { text-shadow: none; background: var(--select-text-bg-color); color: var(--select-text-font-color); }
+#write { margin: 0px auto; height: auto; width: inherit; word-break: normal; overflow-wrap: break-word; position: relative; white-space: normal; overflow-x: visible; padding-top: 36px; }
+#write.first-line-indent p { text-indent: 2em; }
+#write.first-line-indent li p, #write.first-line-indent p * { text-indent: 0px; }
+#write.first-line-indent li { margin-left: 2em; }
+.for-image #write { padding-left: 8px; padding-right: 8px; }
+body.typora-export { padding-left: 30px; padding-right: 30px; }
+.typora-export .footnote-line, .typora-export li, .typora-export p { white-space: pre-wrap; }
+.typora-export .task-list-item input { pointer-events: none; }
+@media screen and (max-width: 500px) {
+  body.typora-export { padding-left: 0px; padding-right: 0px; }
+  #write { padding-left: 20px; padding-right: 20px; }
+  .CodeMirror-sizer { margin-left: 0px !important; }
+  .CodeMirror-gutters { display: none !important; }
+}
+#write li > figure:last-child { margin-bottom: 0.5rem; }
+#write ol, #write ul { position: relative; }
+img { max-width: 100%; vertical-align: middle; image-orientation: from-image; }
+button, input, select, textarea { color: inherit; font: inherit; }
+input[type="checkbox"], input[type="radio"] { line-height: normal; padding: 0px; }
+*, ::after, ::before { box-sizing: border-box; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p, #write pre { width: inherit; }
+#write h1, #write h2, #write h3, #write h4, #write h5, #write h6, #write p { position: relative; }
+p { line-height: inherit; }
+h1, h2, h3, h4, h5, h6 { break-after: avoid-page; break-inside: avoid; orphans: 4; }
+p { orphans: 4; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.8rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.4rem; }
+h5 { font-size: 1.2rem; }
+h6 { font-size: 1rem; }
+.md-math-block, .md-rawblock, h1, h2, h3, h4, h5, h6, p { margin-top: 1rem; margin-bottom: 1rem; }
+.hidden { display: none; }
+.md-blockmeta { color: rgb(204, 204, 204); font-weight: 700; font-style: italic; }
+a { cursor: pointer; }
+sup.md-footnote { padding: 2px 4px; background-color: rgba(238, 238, 238, 0.7); color: rgb(85, 85, 85); border-radius: 4px; cursor: pointer; }
+sup.md-footnote a, sup.md-footnote a:hover { color: inherit; text-transform: inherit; text-decoration: inherit; }
+#write input[type="checkbox"] { cursor: pointer; width: inherit; height: inherit; }
+figure { overflow-x: auto; margin: 1.2em 0px; max-width: calc(100% + 16px); padding: 0px; }
+figure > table { margin: 0px; }
+tr { break-inside: avoid; break-after: auto; }
+thead { display: table-header-group; }
+table { border-collapse: collapse; border-spacing: 0px; width: 100%; overflow: auto; break-inside: auto; text-align: left; }
+table.md-table td { min-width: 32px; }
+.CodeMirror-gutters { border-right: 0px; background-color: inherit; }
+.CodeMirror-linenumber { user-select: none; }
+.CodeMirror { text-align: left; }
+.CodeMirror-placeholder { opacity: 0.3; }
+.CodeMirror pre { padding: 0px 4px; }
+.CodeMirror-lines { padding: 0px; }
+div.hr:focus { cursor: none; }
+#write pre { white-space: pre-wrap; }
+#write.fences-no-line-wrapping pre { white-space: pre; }
+#write pre.ty-contain-cm { white-space: normal; }
+.CodeMirror-gutters { margin-right: 4px; }
+.md-fences { font-size: 0.9rem; display: block; break-inside: avoid; text-align: left; overflow: visible; white-space: pre; background: inherit; position: relative !important; }
+.md-diagram-panel { width: 100%; margin-top: 10px; text-align: center; padding-top: 0px; padding-bottom: 8px; overflow-x: auto; }
+#write .md-fences.mock-cm { white-space: pre-wrap; }
+.md-fences.md-fences-with-lineno { padding-left: 0px; }
+#write.fences-no-line-wrapping .md-fences.mock-cm { white-space: pre; overflow-x: auto; }
+.md-fences.mock-cm.md-fences-with-lineno { padding-left: 8px; }
+.CodeMirror-line, twitterwidget { break-inside: avoid; }
+.footnotes { opacity: 0.8; font-size: 0.9rem; margin-top: 1em; margin-bottom: 1em; }
+.footnotes + .footnotes { margin-top: 0px; }
+.md-reset { margin: 0px; padding: 0px; border: 0px; outline: 0px; vertical-align: top; background: 0px 0px; text-decoration: none; text-shadow: none; float: none; position: static; width: auto; height: auto; white-space: nowrap; cursor: inherit; -webkit-tap-highlight-color: transparent; line-height: normal; font-weight: 400; text-align: left; box-sizing: content-box; direction: ltr; }
+li div { padding-top: 0px; }
+blockquote { margin: 1rem 0px; }
+li .mathjax-block, li p { margin: 0.5rem 0px; }
+li blockquote { margin: 1rem 0px; }
+li { margin: 0px; position: relative; }
+blockquote > :last-child { margin-bottom: 0px; }
+blockquote > :first-child, li > :first-child { margin-top: 0px; }
+.footnotes-area { color: rgb(136, 136, 136); margin-top: 0.714rem; padding-bottom: 0.143rem; white-space: normal; }
+#write .footnote-line { white-space: pre-wrap; }
+@media print {
+  body, html { border: 1px solid transparent; height: 99%; break-after: avoid; break-before: avoid; font-variant-ligatures: no-common-ligatures; }
+  #write { margin-top: 0px; padding-top: 0px; border-color: transparent !important; }
+  .typora-export * { -webkit-print-color-adjust: exact; }
+  .typora-export #write { break-after: avoid; }
+  .typora-export #write::after { height: 0px; }
+  .is-mac table { break-inside: avoid; }
+}
+.footnote-line { margin-top: 0.714em; font-size: 0.7em; }
+a img, img a { cursor: pointer; }
+pre.md-meta-block { font-size: 0.8rem; min-height: 0.8rem; white-space: pre-wrap; background: rgb(204, 204, 204); display: block; overflow-x: hidden; }
+p > .md-image:only-child:not(.md-img-error) img, p > img:only-child { display: block; margin: auto; }
+#write.first-line-indent p > .md-image:only-child:not(.md-img-error) img { left: -2em; position: relative; }
+p > .md-image:only-child { display: inline-block; width: 100%; }
+#write .MathJax_Display { margin: 0.8em 0px 0px; }
+.md-math-block { width: 100%; }
+.md-math-block:not(:empty)::after { display: none; }
+.MathJax_ref { fill: currentcolor; }
+[contenteditable="true"]:active, [contenteditable="true"]:focus, [contenteditable="false"]:active, [contenteditable="false"]:focus { outline: 0px; box-shadow: none; }
+.md-task-list-item { position: relative; list-style-type: none; }
+.task-list-item.md-task-list-item { padding-left: 0px; }
+.md-task-list-item > input { position: absolute; top: 0px; left: 0px; margin-left: -1.2em; margin-top: calc(1em - 10px); border: none; }
+.math { font-size: 1rem; }
+.md-toc { min-height: 3.58rem; position: relative; font-size: 0.9rem; border-radius: 10px; }
+.md-toc-content { position: relative; margin-left: 0px; }
+.md-toc-content::after, .md-toc::after { display: none; }
+.md-toc-item { display: block; color: rgb(65, 131, 196); }
+.md-toc-item a { text-decoration: none; }
+.md-toc-inner:hover { text-decoration: underline; }
+.md-toc-inner { display: inline-block; cursor: pointer; }
+.md-toc-h1 .md-toc-inner { margin-left: 0px; font-weight: 700; }
+.md-toc-h2 .md-toc-inner { margin-left: 2em; }
+.md-toc-h3 .md-toc-inner { margin-left: 4em; }
+.md-toc-h4 .md-toc-inner { margin-left: 6em; }
+.md-toc-h5 .md-toc-inner { margin-left: 8em; }
+.md-toc-h6 .md-toc-inner { margin-left: 10em; }
+@media screen and (max-width: 48em) {
+  .md-toc-h3 .md-toc-inner { margin-left: 3.5em; }
+  .md-toc-h4 .md-toc-inner { margin-left: 5em; }
+  .md-toc-h5 .md-toc-inner { margin-left: 6.5em; }
+  .md-toc-h6 .md-toc-inner { margin-left: 8em; }
+}
+a.md-toc-inner { font-size: inherit; font-style: inherit; font-weight: inherit; line-height: inherit; }
+.footnote-line a:not(.reversefootnote) { color: inherit; }
+.md-attr { display: none; }
+.md-fn-count::after { content: "."; }
+code, pre, samp, tt { font-family: var(--monospace); }
+kbd { margin: 0px 0.1em; padding: 0.1em 0.6em; font-size: 0.8em; color: rgb(36, 39, 41); background: rgb(255, 255, 255); border: 1px solid rgb(173, 179, 185); border-radius: 3px; box-shadow: rgba(12, 13, 14, 0.2) 0px 1px 0px, rgb(255, 255, 255) 0px 0px 0px 2px inset; white-space: nowrap; vertical-align: middle; }
+.md-comment { color: rgb(162, 127, 3); opacity: 0.8; font-family: var(--monospace); }
+code { text-align: left; vertical-align: initial; }
+a.md-print-anchor { white-space: pre !important; border-width: initial !important; border-style: none !important; border-color: initial !important; display: inline-block !important; position: absolute !important; width: 1px !important; right: 0px !important; outline: 0px !important; background: 0px 0px !important; text-decoration: initial !important; text-shadow: initial !important; }
+.md-inline-math .MathJax_SVG .noError { display: none !important; }
+.html-for-mac .inline-math-svg .MathJax_SVG { vertical-align: 0.2px; }
+.md-math-block .MathJax_SVG_Display { text-align: center; margin: 0px; position: relative; text-indent: 0px; max-width: none; max-height: none; min-height: 0px; min-width: 100%; width: auto; overflow-y: hidden; display: block !important; }
+.MathJax_SVG_Display, .md-inline-math .MathJax_SVG_Display { width: auto; margin: inherit; display: inline-block !important; }
+.MathJax_SVG .MJX-monospace { font-family: var(--monospace); }
+.MathJax_SVG .MJX-sans-serif { font-family: sans-serif; }
+.MathJax_SVG { display: inline; font-style: normal; font-weight: 400; line-height: normal; zoom: 90%; text-indent: 0px; text-align: left; text-transform: none; letter-spacing: normal; word-spacing: normal; overflow-wrap: normal; white-space: nowrap; float: none; direction: ltr; max-width: none; max-height: none; min-width: 0px; min-height: 0px; border: 0px; padding: 0px; margin: 0px; }
+.MathJax_SVG * { transition: none 0s ease 0s; }
+.MathJax_SVG_Display svg { vertical-align: middle !important; margin-bottom: 0px !important; margin-top: 0px !important; }
+.os-windows.monocolor-emoji .md-emoji { font-family: "Segoe UI Symbol", sans-serif; }
+.md-diagram-panel > svg { max-width: 100%; }
+[lang="flow"] svg, [lang="mermaid"] svg { max-width: 100%; height: auto; }
+[lang="mermaid"] .node text { font-size: 1rem; }
+table tr th { border-bottom: 0px; }
+video { max-width: 100%; display: block; margin: 0px auto; }
+iframe { max-width: 100%; width: 100%; border: none; }
+.highlight td, .highlight tr { border: 0px; }
+mark { background: rgb(255, 255, 0); color: rgb(0, 0, 0); }
+.md-html-inline .md-plain, .md-html-inline strong, mark .md-inline-math, mark strong { color: inherit; }
+mark .md-meta { color: rgb(0, 0, 0); opacity: 0.3 !important; }
+@media print {
+  .typora-export h1, .typora-export h2, .typora-export h3, .typora-export h4, .typora-export h5, .typora-export h6 { break-inside: avoid; }
+}
+.md-diagram-panel .messageText { stroke: none !important; }
+.md-diagram-panel .start-state { fill: var(--node-fill); }
+.md-diagram-panel .edgeLabel rect { opacity: 1 !important; }
+.md-require-zoom-fix foreignobject { font-size: var(--mermaid-font-zoom); }
+
+
+:root {
+    --side-bar-bg-color: #fafafa;
+    --control-text-color: #777;
+}
+
+@include-when-export url(https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext);
+
+/* open-sans-regular - latin-ext_latin */
+  /* open-sans-italic - latin-ext_latin */
+    /* open-sans-700 - latin-ext_latin */
+    /* open-sans-700italic - latin-ext_latin */
+  html {
+    font-size: 16px;
+}
+
+body {
+    font-family: "Open Sans","Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: rgb(51, 51, 51);
+    line-height: 1.6;
+}
+
+#write {
+    max-width: 860px;
+  	margin: 0 auto;
+  	padding: 30px;
+    padding-bottom: 100px;
+}
+
+@media only screen and (min-width: 1400px) {
+	#write {
+		max-width: 1024px;
+	}
+}
+
+@media only screen and (min-width: 1800px) {
+	#write {
+		max-width: 1200px;
+	}
+}
+
+#write > ul:first-child,
+#write > ol:first-child{
+    margin-top: 30px;
+}
+
+a {
+    color: #4183C4;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    position: relative;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.4;
+    cursor: text;
+}
+h1:hover a.anchor,
+h2:hover a.anchor,
+h3:hover a.anchor,
+h4:hover a.anchor,
+h5:hover a.anchor,
+h6:hover a.anchor {
+    text-decoration: none;
+}
+h1 tt,
+h1 code {
+    font-size: inherit;
+}
+h2 tt,
+h2 code {
+    font-size: inherit;
+}
+h3 tt,
+h3 code {
+    font-size: inherit;
+}
+h4 tt,
+h4 code {
+    font-size: inherit;
+}
+h5 tt,
+h5 code {
+    font-size: inherit;
+}
+h6 tt,
+h6 code {
+    font-size: inherit;
+}
+h1 {
+    font-size: 2.25em;
+    line-height: 1.2;
+    border-bottom: 1px solid #eee;
+}
+h2 {
+    font-size: 1.75em;
+    line-height: 1.225;
+    border-bottom: 1px solid #eee;
+}
+
+/*@media print {
+    .typora-export h1,
+    .typora-export h2 {
+        border-bottom: none;
+        padding-bottom: initial;
+    }
+
+    .typora-export h1::after,
+    .typora-export h2::after {
+        content: "";
+        display: block;
+        height: 100px;
+        margin-top: -96px;
+        border-top: 1px solid #eee;
+    }
+}*/
+
+h3 {
+    font-size: 1.5em;
+    line-height: 1.43;
+}
+h4 {
+    font-size: 1.25em;
+}
+h5 {
+    font-size: 1em;
+}
+h6 {
+   font-size: 1em;
+    color: #777;
+}
+p,
+blockquote,
+ul,
+ol,
+dl,
+table{
+    margin: 0.8em 0;
+}
+li>ol,
+li>ul {
+    margin: 0 0;
+}
+hr {
+    height: 2px;
+    padding: 0;
+    margin: 16px 0;
+    background-color: #e7e7e7;
+    border: 0 none;
+    overflow: hidden;
+    box-sizing: content-box;
+}
+
+li p.first {
+    display: inline-block;
+}
+ul,
+ol {
+    padding-left: 30px;
+}
+ul:first-child,
+ol:first-child {
+    margin-top: 0;
+}
+ul:last-child,
+ol:last-child {
+    margin-bottom: 0;
+}
+blockquote {
+    border-left: 4px solid #dfe2e5;
+    padding: 0 15px;
+    color: #777777;
+}
+blockquote blockquote {
+    padding-right: 0;
+}
+table {
+    padding: 0;
+    word-break: initial;
+}
+table tr {
+    border-top: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 0;
+}
+table tr:nth-child(2n),
+thead {
+    background-color: #f8f8f8;
+}
+table th {
+    font-weight: bold;
+    border: 1px solid #dfe2e5;
+    border-bottom: 0;
+    margin: 0;
+    padding: 6px 13px;
+}
+table td {
+    border: 1px solid #dfe2e5;
+    margin: 0;
+    padding: 6px 13px;
+}
+table th:first-child,
+table td:first-child {
+    margin-top: 0;
+}
+table th:last-child,
+table td:last-child {
+    margin-bottom: 0;
+}
+
+.CodeMirror-lines {
+    padding-left: 4px;
+}
+
+.code-tooltip {
+    box-shadow: 0 1px 1px 0 rgba(0,28,36,.3);
+    border-top: 1px solid #eef2f2;
+}
+
+.md-fences,
+code,
+tt {
+    border: 1px solid #e7eaed;
+    background-color: #f8f8f8;
+    border-radius: 3px;
+    padding: 0;
+    padding: 2px 4px 0px 4px;
+    font-size: 0.9em;
+}
+
+code {
+    background-color: #f3f4f4;
+    padding: 0 2px 0 2px;
+}
+
+.md-fences {
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding-top: 8px;
+    padding-bottom: 6px;
+}
+
+
+.md-task-list-item > input {
+  margin-left: -1.3em;
+}
+
+@media print {
+    html {
+        font-size: 13px;
+    }
+    table,
+    pre {
+        page-break-inside: avoid;
+    }
+    pre {
+        word-wrap: break-word;
+    }
+}
+
+.md-fences {
+	background-color: #f8f8f8;
+}
+#write pre.md-meta-block {
+	padding: 1rem;
+    font-size: 85%;
+    line-height: 1.45;
+    background-color: #f7f7f7;
+    border: 0;
+    border-radius: 3px;
+    color: #777777;
+    margin-top: 0 !important;
+}
+
+.mathjax-block>.code-tooltip {
+	bottom: .375rem;
+}
+
+.md-mathjax-midline {
+    background: #fafafa;
+}
+
+#write>h3.md-focus:before{
+	left: -1.5625rem;
+	top: .375rem;
+}
+#write>h4.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h5.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+#write>h6.md-focus:before{
+	left: -1.5625rem;
+	top: .285714286rem;
+}
+.md-image>.md-meta {
+    /*border: 1px solid #ddd;*/
+    border-radius: 3px;
+    padding: 2px 0px 0px 4px;
+    font-size: 0.9em;
+    color: inherit;
+}
+
+.md-tag {
+    color: #a7a7a7;
+    opacity: 1;
+}
+
+.md-toc {
+    margin-top:20px;
+    padding-bottom:20px;
+}
+
+.sidebar-tabs {
+    border-bottom: none;
+}
+
+#typora-quick-open {
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+}
+
+#typora-quick-open-item {
+    background-color: #FAFAFA;
+    border-color: #FEFEFE #e5e5e5 #e5e5e5 #eee;
+    border-style: solid;
+    border-width: 1px;
+}
+
+/** focus mode */
+.on-focus-mode blockquote {
+    border-left-color: rgba(85, 85, 85, 0.12);
+}
+
+header, .context-menu, .megamenu-content, footer{
+    font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.file-node-content:hover .file-node-icon,
+.file-node-content:hover .file-node-open-state{
+    visibility: visible;
+}
+
+.mac-seamless-mode #typora-sidebar {
+    background-color: #fafafa;
+    background-color: var(--side-bar-bg-color);
+}
+
+.md-lang {
+    color: #b4654d;
+}
+
+.html-for-mac .context-menu {
+    --item-hover-bg-color: #E6F0FE;
+}
+
+#md-notification .btn {
+    border: 0;
+}
+
+.dropdown-menu .divider {
+    border-color: #e5e5e5;
+}
+
+.ty-preferences .window-content {
+    background-color: #fafafa;
+}
+
+.ty-preferences .nav-group-item.active {
+    color: white;
+    background: #999;
+}
+
+
+</style>
+</head>
+<body class='typora-export os-windows'>
+<div id='write'  class=''><h1><a name="config-options" class="md-header-anchor"></a><span>Config Options</span></h1><p><span>For the JSON formatted variables, please keep these in mind:</span></p><ul><li><span>JSON strings must be double-quoted (&quot;); single quotes (&#39;) will be rejected by JSON parser</span></li><li><span>The last line of arrays/objects may NOT have a trailing comma</span></li><li><span>No comments whatsoever</span></li></ul><p>&nbsp;</p><figure><table><thead><tr><th><span>Name</span></th><th><span>Type</span></th><th><span>Default</span></th><th><span>Remarks</span></th></tr></thead><tbody><tr><td><span>DEBUG_LEVEL</span></td><td><span>enum</span></td><td><span>ERROR</span></td><td><span>Level of output messages in the Script Log (aka Output Log) shown by the script.</span><br><br><span>Unless you are adventurous, do not set it above WARN, i.e. NORMAL, INFO, VERBOSE emita ton of information and might freeze your PC/DOpus.</span><br><br><span>The log can be opened by via:</span><br><span>* View -&gt; Output Window</span><br><span>* by the command </span><code>Set UTILITY=OtherLog,Toggle</code><br><span>* by opening Find, Synchronize, etc. and choosing &quot;Other Log&quot; in the &quot;Utility Panel&quot; dropdown</span></td></tr><tr><td><span>FORCE_REFRESH_AFTER_UPDATE</span></td><td><span>boolean</span></td><td><span>true</span></td><td><span>Automatically refresh the current lister after changes.</span><br><br><span>It keeps the current selection.</span></td></tr><tr><td><span>MEDIAINFO_PATH</span></td><td><span>string</span></td><td><span>/programfilesx86/MediaInfo/MediaInfo.exe</span></td><td><span>Path to MediaInfo portable CLI.</span><br><br><span>It can be downloaded from </span><a href='https://mediaarea.net/en/MediaInfo/Download/Windows'><span>https://mediaarea.net/en/MediaInfo/Download/Windows</span></a></td></tr><tr><td><span>TEMP_FILES_DIR</span></td><td><span>string</span></td><td><span>%TEMP%</span></td><td><span>Temporary directory, in which temporary JSON outputs from MediaInfo are stored.</span><br><br><span>They are immediately deleted after a file has been processed.</span><br><br><span>This is ignored in Templess Mode (see below).</span></td></tr><tr><td><span>TEMPLESS_MODE</span></td><td><span>boolean</span></td><td><span>false</span></td><td><em><span>Experimental:</span></em><br><br><span>In this mode, MediaInfo outputs are read into the script without using temporary files.</span><br><br><span>This is a highly experimental feature and uses temporary (volatile) environment variables to pass the data from the command output to DOpus.</span><br><br><span>If you are lucky, it might work just as fast as, if not faster than the normal mode using temp-files. If not, disable it again.</span></td></tr><tr><td><span>TEMPLESS_CHUNK_SIZE</span></td><td><span>number</span></td><td><span>32768</span></td><td><span>Experimental:</span><br><br><span>Determines how big the chunks, i.e. volatile envvar blocks, should be. Windows has certain limitations on command line and envvar lengths. If templess mode works mostly for you, you can increase the value even further.</span><br><br><span>The default value is chosen very conservatively.</span></td></tr><tr><td><span>KEEP_ORIG_MODTS</span></td><td><span>boolean</span></td><td><span>true</span></td><td><span>Attaching ADS to files normally changes the </span><em><span>last modification</span></em><span> timestamps of the parent file.</span><br><br><span>* true: The script automatically resets the timestamp to original.</span><br><span>* false: The parent files&#39; modification timestamp is changed.</span></td></tr><tr><td><span>CACHE_ENABLED</span></td><td><span>boolean</span></td><td><span>true</span></td><td><span>Cache metadata JS objects in memory for unchanged files to speed up process.</span><br><br><span>The information stored in ADS is usually small, typically ~1 KB per file, but I cannot guarantee how much memory management overhead Windows/WSH/JScript/DOpus put on top of each object. The cache is used only and only if this script runs, i.e. automatically when any of the columns is visible (incl. in InfoTips/Tiles), or if you trigger a command.</span><br><br><span>To ensure the information is always up-to-date, the following algorithm is used:</span><br><br><span>* Caching disabled or file is not in cache =&gt; read from disk</span><br><br><span>* File is already in cache =&gt; check file&#39;s last modification time against the timestamp in cached info</span><br><span> * If different =&gt; read from disk</span><br><span> * If same =&gt; use cache</span><br><span>* UPDATE command executed (regardless of file was in cache or not) =&gt; add to/update cache</span><br><span>* File is already in cache but DELETE command is executed =&gt; remove from cache</span><br><br><span>WARNING:</span><br><br><span>The cache will fail for one particular scenario:</span><br><br><span>Say, you have a file and you copy it to another folder. If the copy is processed, its information will be cached. If you delete the copy via DOpus (or some other program), the script will not receive this information automatically. If you copy the original file, which has the exact same file size &amp; modification timestamp, to the same path again, the new copy will have no ADS but the script will still think that the it is the previously processed file and show the information from the cache. Normally this is not a problem for displaying purposes, but if you copy the copy to another drive, it will have no ADS. If you do this, you should either manually update the 2nd copy, or delete the cache to see that the copy has no ADS.</span><br><br><span>Please keep this in mind.</span><br><br><span>CAVEATS:</span><br><br><span>If you keep DOpus open for a long time and handle thousands of small files (only when any of these extra columns is shown), the memory usage of DOpus will increase. This is not a &#39;memory leak&#39; though, just the script doing what you tell it to: To cache stuff :)</span><br><br><span>To avoid high mem usage you can manually call the CLEARCACHE command via button, menu...</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_ESSENTIAL</span></td><td><span>string[] as json</span></td><td><span>[</span><br><span>  &quot;MExt_HasMetadata&quot;,</span><br><span>  &quot;MExt_NeedsUpdate&quot;,</span><br><span>  &quot;MExt_TotalBitrate&quot;,</span><br><span>  &quot;MExt_VideoCodec&quot;,</span><br><span>  &quot;MExt_VideoBitrate&quot;,</span><br><span>  &quot;MExt_AudioCodec&quot;,</span><br><span>  &quot;MExt_AudioBitrate&quot;,</span><br><span>  &quot;MExt_CombinedDuration&quot;,</span><br><span>  &quot;MExt_VDimensions&quot;,</span><br><span>  &quot;MExt_VResolution&quot;,</span><br><span>  &quot;MExt_VFrameRate&quot;,</span><br><span>  &quot;MExt_VARCombined&quot;,</span><br><span>  &quot;MExt_MultiAudio&quot;,</span><br><span>  &quot;MExt_AudioChannels&quot;,</span><br><span>  &quot;MExt_AudioLang&quot;,</span><br><span>  &quot;MExt_AudioBitrateMode&quot;,</span><br><span>  &quot;MExt_AudioCompressionMode&quot;,</span><br><span>  &quot;MExt_HasReplayGain&quot;,</span><br><span>  &quot;MExt_VBitratePerPixel&quot;,</span><br><span>  &quot;MExt_SubtitleLang&quot;</span><br><span>]</span></td><td><em><span>Essential</span></em><span> columns list, which can be toggled on/off via supplied button (default icon: 1).</span><br><br><span>The list is ordered, i.e. they are added/removed in the same order as configured.</span><br><br><span>Unlike the list might suggest, you can use any DOpus field in this list, e.g. mix and match standard movie/audio fields from DOpus.</span><br><br><span>Also see the next setting TOGGLEABLE_FIELDS_ESSENTIAL_AFTER.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_ESSENTIAL_AFTER</span></td><td><span>string</span></td><td><span>Comments</span></td><td><span>The column name after which the </span><em><span>Essential</span></em><span> fields are added to/removed from.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_OPTIONAL</span></td><td><span>string[] (as json)</span></td><td><span>[</span><br><span>    &quot;MExt_GrossByterate&quot;,</span><br><span>    &quot;MExt_TotalDuration&quot;,</span><br><span>    &quot;MExt_VideoDuration&quot;,</span><br><span>    &quot;MExt_AudioDuration&quot;,</span><br><span>    &quot;MExt_VARDisplay&quot;,</span><br><span>    &quot;MExt_VARRaw&quot;,</span><br><span>    &quot;MExt_VideoCount&quot;,</span><br><span>    &quot;MExt_AudioCount&quot;,</span><br><span>    &quot;MExt_TextCount&quot;,</span><br><span>    &quot;MExt_OthersCount&quot;,</span><br><span>    &quot;MExt_VEncLibName&quot;,</span><br><span>    &quot;MExt_VEncLib&quot;,</span><br><span>    &quot;MExt_VCodecID&quot;,</span><br><span>    &quot;MExt_ACodecID&quot;,</span><br><span>    &quot;MExt_AFormatVersion&quot;,</span><br><span>    &quot;MExt_AProfile&quot;,</span><br><span>    &quot;MExt_EncoderApp&quot;,</span><br><span>    &quot;MExt_DateEncoded&quot;,</span><br><span>    &quot;MExt_DateTagged&quot;,</span><br><span>]</span></td><td><em><span>Optional</span></em><span> columns list, which can be toggled on/off via supplied button (default icon: 2).</span><br><br><span>The rest as in </span><em><span>Essential</span></em><span> fields above.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_OPTIONAL_AFTER</span></td><td><span>string</span></td><td><span>MExt_SubtitleLang</span></td><td><span>The column name after which the </span><em><span>Optional</span></em><span> fields are added to/removed from.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_OTHER</span></td><td><span>string[] (as json)</span></td><td><span>[</span><br><span>    &quot;MExt_HelperContainer&quot;,</span><br><span>    &quot;MExt_HelperVideoCodec&quot;,</span><br><span>    &quot;MExt_HelperAudioCodec&quot;,</span><br><span>    &quot;MExt_CleanedUpName&quot;,</span><br><span>]</span></td><td><em><span>Other</span></em><span> columns list, which can be toggled on/off via supplied button (default icon: 3).</span><br><br><span>These fields are usually unnecessary for daily usage..</span><br><br><span>The rest as in </span><em><span>Essential</span></em><span> fields above.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_OTHER_AFTER</span></td><td><span>string</span></td><td><none></td><td><span>The column name after which the </span><em><span>Other</span></em><span> fields are added to/removed from.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_VERBOSE</span></td><td><span>string[] (as json)</span></td><td><span>[</span><br><span>    &quot;MExt_ADSDataFormatted&quot;,</span><br><span>    &quot;MExt_ADSDataRaw&quot;,</span><br><span>]</span></td><td><span>Verbose columns list, which can be toggled on/off via supplied button (default icon: 4).</span><br><br><span>These fields are usually unnecessary for daily usage..</span><br><br><span>The rest as in </span><em><span>Essential</span></em><span> fields above.</span></td></tr><tr><td><span>TOGGLEABLE_FIELDS_VERBOSE_AFTER</span></td><td><span>string</span></td><td><none></td><td><span>The column name after which the </span><em><span>Verbose</span></em><span> fields are added to/removed from.</span></td></tr><tr><td><span>CODEC_USE_SHORT_VARIANT</span></td><td><span>boolean</span></td><td><span>false</span></td><td><span>Use short variants of codecs, found via LOOKUP_CODECS</span></td></tr><tr><td><span>CODEC_APPEND_ADDINFO</span></td><td><span>boolean</span></td><td><span>true</span></td><td><span>Add container or codec-specific information to the container/video/audio codec fields automatically.</span><br><span>If an AAC file is encoded with &#39;LC SBR&#39; it is shown as &#39;AAC (LC SPR)&#39;.</span></td></tr><tr><td><span>RESOLUTION_APPEND_VERTICAL</span></td><td><span>boolean</span></td><td><span>true</span></td><td><span>Append &#39;(Vertical)&#39; to video resolutions or not, mostly relevant for mobile phone videos.</span><br><br><em><span>Example: A file with with 480x640 resolution, will be shown as 480p (Vertical).</span></em></td></tr><tr><td><span>FORMATS_REGEX_VBR</span></td><td><span>regexp (as string)</span></td><td><span>/ALAC</span><span>|</span><span>Monkey&#39;s Audio</span><span>|</span><span>TAK</span><span>|</span><span>DSD/</span></td><td><span>Audio formats which do not store a VBR/CBR/ABR information separately but are VBR by definition.</span><br><em><span>Do not change unless necessary.</span></em></td></tr><tr><td><span>FORMATS_REGEX_LOSSLESS</span></td><td><span>regexp (as string)</span></td><td><span>/ALAC</span><span>|</span><span>PCM</span><span>|</span><span>TTA</span><span>|</span><span>DSD/</span></td><td><span>Audio formats which do not store a lossless information separately but are lossless by definition.</span><br><br><em><span>Do not change unless necessary.</span></em></td></tr><tr><td><span>FORMATS_REGEX_LOSSY</span></td><td><span>regexp (as string)</span></td><td><span>/AMR/</span></td><td><span>Audio formats which do not store a lossy information separately but are lossy by definition.</span><br><br><em><span>Do not change unless necessary.</span></em></td></tr><tr><td><span>LOOKUP_RESOLUTIONS</span></td><td><span>&lt;string, string&gt; (as json)</span></td><td><span>{</span><br><span>    &quot;240&quot;:      &quot;240p&quot;,</span><br><span>    &quot;360&quot;:      &quot;360p&quot;,</span><br><span>    &quot;480&quot;:      &quot;480p&quot;,</span><br><span>    &quot;576&quot;:      &quot;576p&quot;,</span><br><span>    &quot;720&quot;:      &quot;720p&quot;,</span><br><span>    &quot;1080&quot;:     &quot;1080p&quot;,</span><br><span>    &quot;2160&quot;:     &quot;2160p&quot;,</span><br><span>    &quot;4320&quot;:     &quot;4320p&quot;</span><br><span>}</span></td><td><span>Video resolution translation hash. These are also used for grouping. For calculation always, the smaller of width/height is taken. Also see RESOLUTION_APPEND_VERTICAL. </span><br><br><span>The comparison is always &lt;= (less or equal), i.e.</span><br><em><span>actual resolution &lt;= config values</span></em><br><br><span>Alternatively, you can use SD, HD-Ready, HD, UHD, 4K, 8K, etc.</span><br><br><em><span>Example: A file with with 640x480 resolution, will be shown as 480p.</span></em></td></tr><tr><td><span>LOOKUP_DURATION_GROUPS</span></td><td><span>&lt;string, string&gt; (as json)</span></td><td><span>{</span><br><span>    &quot;0&quot;:        &quot; ≠00:00&quot;,</span><br><span>    &quot;60&quot;:       &quot;&lt; 01:00&quot;,</span><br><span>    &quot;120&quot;:      &quot;01:00-02:00&quot;,</span><br><span>    &quot;180&quot;:      &quot;02:00-03:00&quot;,</span><br><span>    &quot;240&quot;:      &quot;03:00-04:00&quot;,</span><br><span>    &quot;300&quot;:      &quot;04:00-05:00&quot;,</span><br><span>    &quot;600&quot;:      &quot;05:00-10:00&quot;,</span><br><span>    &quot;900&quot;:      &quot;10:00-15:00&quot;,</span><br><span>    &quot;1200&quot;:     &quot;15:00-20:00&quot;,</span><br><span>    &quot;1800&quot;:     &quot;20:00-30:00&quot;,</span><br><span>    &quot;3600&quot;:     &quot;30:00-1:00:00&quot;,</span><br><span>    &quot;5400&quot;:     &quot;Over 1h&quot;,</span><br><span>    &quot;7200&quot;:     &quot;Over 1.5h&quot;,</span><br><span>    &quot;10800&quot;:    &quot;Over 2h&quot;,</span><br><span>    &quot;999999&quot;:   &quot;Over 3h&quot;</span><br><span>}</span></td><td><span>Duration lookup hash. These are also used for grouping.</span><br><br><span>The comparison is always &lt;= (less or equal), i.e.</span><br><em><span>actual duration &lt;= config values</span></em><br><br><span>Some raw files extracted from movie containers, notably raw AAC (not M4A), raw DTS, raw Atmos are reported as having a 0 duration by MediaInfo. But if the file definitely has audio, you can recognize this as well.</span><br><br><span> \u2260 is the Unicode &#39;not equal&#39; sign.</span><br><span> </span><br><span>If the file has no audio track at all, this is grouped automatically under &#39;No Audio&#39;, no need to define it here.</span><br><br><span>Also note that some values like &#39;Over 1h&#39; depend on preceeding key&#39;s value</span></td></tr><tr><td><span>LOOKUP_CODECS</span></td><td><span>&lt;string, string&gt; (as json)</span></td><td><em><span>see below</span></em></td><td>&nbsp;</td></tr><tr><td><span>LOOKUP_CHANNELS</span></td><td><span>&lt;string, string&gt; (as json)</span></td><td><span>{</span><br><span>    &quot;0&quot;: &quot; &quot;,</span><br><span>    &quot;X&quot;: &quot;≠0&quot;,</span><br><span>    &quot;1&quot;: &quot;1.0&quot;,</span><br><span>    &quot;2&quot;: &quot;2.0&quot;,</span><br><span>    &quot;3&quot;: &quot;2.1&quot;,</span><br><span>    &quot;4&quot;: &quot;4.0&quot;,</span><br><span>    &quot;5&quot;: &quot;5.0&quot;,</span><br><span>    &quot;6&quot;: &quot;5.1&quot;,</span><br><span>    &quot;7&quot;: &quot;5.2&quot;,</span><br><span>    &quot;8&quot;: &quot;7.1&quot;,</span><br><span>    &quot;9&quot;: &quot;7.2&quot;</span><br><span>}</span></td><td><span>0 means file has no audio track</span><br><span>X: means file has an audio track, but its channel information cannot be extracted by MediaInfo. Some formats like Musepack, raw DTS report an audio track but not the channel count, sorted between 0 &amp; 1.</span><br><br><span>Some alternatives for 0:</span><br><span>* &quot;0&quot;: &quot;0 (no audio)&quot;</span><br><span>* &quot;0&quot;: &quot;0 (n/a)&quot;</span><br><span>* &quot;0&quot;: &quot;0&quot;</span><br><span>If you use &quot;0&quot;: &quot;&quot; the value 0 will be shown as empty string as well, which impacts sorting.</span><br><br><span>Some alternatives for X:</span><br><span>* &quot;X&quot;: &quot;&gt; 0&quot;,</span><br><span>* &quot;X&quot;: &quot;≠ 0&quot;</span></td></tr><tr><td><span>NAME_CLEANUP</span></td><td>&nbsp;</td><td>&nbsp;</td><td><span>Currently only for internal use.</span></td></tr></tbody></table></figure><p>&nbsp;</p><style>
+#write {
+    max-width: unset;
+}
+@media only screen and (min-width: 1400px) {
+	#write {
+		max-width: unset !important;;
+	}
+}
+@media only screen and (min-width: 1800px) {
+	#write {
+		max-width: unset !important;;
+	}
+}
+</style></div>
+</body>
+</html>
